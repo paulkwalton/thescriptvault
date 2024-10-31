@@ -38,7 +38,7 @@ download_script "https://raw.githubusercontent.com/paulkwalton/thescriptvault/re
 chmod 755 -R /tmp/exploit_server
 
 # Get the IP address from tun0 interface
-IP=$(ip -4 addr show tun0 2>/dev/null | grep -oP '(?<=inet\s)\d+(\.\d+){3}')
+IP=$(ip -4 addr show eth0 2>/dev/null | grep -oP '(?<=inet\s)\d+(\.\d+){3}')
 
 if [ -z "$IP" ]; then
     echo "Error: tun0 interface not found or no IP address assigned."
