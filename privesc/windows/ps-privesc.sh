@@ -71,4 +71,4 @@ done
 
 
 # Start the web server
-python3 -m http.server 8080 -d /tmp
+python3 -m http.server 8080 -d /tmp/exploit_server
