@@ -145,6 +145,7 @@ sudo git clone https://github.com/carlospolop/PEASS-ng.git /opt/privesc/windows/
 sudo git clone https://github.com/PowerShellMafia/PowerSploit.git /opt/privesc/powersploit
 sudo git clone https://github.com/GhostPack/Seatbelt.git /opt/privesc/seatbelt
 sudo git clone https://github.com/GhostPack/SharpUp.git /opt/privesc/sharpup
+sudo git clone https://github.com/danielbohannon/Invoke-Obfuscation.git /opt/privesc/invoke-obfuscation
 # Build Review
 sudo git clone https://github.com/OneLogicalMyth/BuildReview-Windows.git /opt/buildreview/buildreview-windows
 sudo git clone https://github.com/OneLogicalMyth/PAudit.git /opt/buildreview/paudit
