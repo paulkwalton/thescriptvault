@@ -1,3 +1,6 @@
+## Script used to set privs if you have the relevant access. .\yourscript.ps1 -Privilege SeDebugPrivilege
+
+
 param(    ## The privilege to adjust. This set is taken from
     ## http://msdn.microsoft.com/en-us/library/bb530716(VS.85).aspx
 
