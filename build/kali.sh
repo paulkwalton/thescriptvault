@@ -165,6 +165,7 @@ sudo git clone https://github.com/ropnop/kerbrute.git /opt/adtools/kerbrute
 sudo git clone https://github.com/lgandx/PCredz.git /opt/packetcapture/pcredz
 curl https://i.jpillora.com/chisel! | bash
 wget https://github.com/jpillora/chisel/releases/download/v1.10.0/chisel_1.10.0_linux_amd64.gz
+sudo git clone https://github.com/SnaffCon/Snaffler.git /opt/snaffler
 # Persistence Tools
 sudo git clone https://github.com/Sw4mpf0x/PowerLurk.git /opt/persistence/windows/powerlurk
 # Active Directory Tools (ADTools)
