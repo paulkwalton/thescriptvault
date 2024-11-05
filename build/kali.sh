@@ -147,6 +147,8 @@ sudo git clone https://github.com/GhostPack/Seatbelt.git /opt/privesc/seatbelt
 sudo git clone https://github.com/GhostPack/SharpUp.git /opt/privesc/sharpup
 sudo git clone https://github.com/danielbohannon/Invoke-Obfuscation.git /opt/privesc/invoke-obfuscation
 sudo git clone https://github.com/BeichenDream/GodPotato.git /opt/privesc/godpotato
+sudo git clone https://github.com/ohpe/juicy-potato.git /opt/privesc/juicypotato
+sudo git clone https://github.com/itm4n/PrintSpoofer.git /opt/privesc/printspoofer
 # Build Review
 sudo git clone https://github.com/OneLogicalMyth/BuildReview-Windows.git /opt/buildreview/buildreview-windows
 sudo git clone https://github.com/OneLogicalMyth/PAudit.git /opt/buildreview/paudit
