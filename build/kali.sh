@@ -133,7 +133,7 @@ echo "Downloading additional tools..."
 sudo mkdir -p /opt/{sysinternals,privesc/{linux,windows},buildreview,password,network,persistence,adtools,bof,filehosting,ics,packetcapture}
 
 # Sysinternals
-# (No repositories in this category for now)
+wget -O /opt/sysinternals https://download.sysinternals.com/files/Procdump.zip
 
 # Privilege Escalation (Linux)
 sudo git clone https://github.com/rebootuser/LinEnum.git /opt/privesc/linux/linenum
