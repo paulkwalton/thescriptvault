@@ -150,6 +150,7 @@ sudo git clone https://github.com/BeichenDream/GodPotato.git /opt/privesc/godpot
 sudo git clone https://github.com/ohpe/juicy-potato.git /opt/privesc/juicypotato
 sudo git clone https://github.com/itm4n/PrintSpoofer.git /opt/privesc/printspoofer
 sudo git clone https://github.com/TheWover/donut.git opt/privesc/donut
+sudo git clone https://github.com/decoder-it/psgetsystem.git /opt/privesc/psgetsystem
 # Build Review
 sudo git clone https://github.com/OneLogicalMyth/BuildReview-Windows.git /opt/buildreview/buildreview-windows
 sudo git clone https://github.com/OneLogicalMyth/PAudit.git /opt/buildreview/paudit
