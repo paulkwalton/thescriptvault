@@ -43,3 +43,12 @@ try {
 } catch {
     Write-Output "Failed to execute systemupdater.exe: $_"
 }
+
+# Delete systemupdater.exe after it has finished running
+try {
+    Remove-Item -Path $desktopPath -Force
+    Write-Output "systemupdater.exe has been deleted from the desktop."
+} catch {
+    Write-Output "Failed to delete systemupdater.exe: $_"
+}
+
