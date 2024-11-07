@@ -1,5 +1,6 @@
 param(    ## The privilege to adjust. This set is taken from
-    ## http://msdn.microsoft.com/en-us/library/bb530716(VS.85).aspx
+    ## http://msdn.microsoft.com/en-us/library/bb530716(VS.85).aspx .\script.ps1 -Privilege SeDebugPrivilege -Disable
+
 
     [ValidateSet(
         "SeAssignPrimaryTokenPrivilege", "SeAuditPrivilege", "SeBackupPrivilege",
