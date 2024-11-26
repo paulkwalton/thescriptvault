@@ -38,12 +38,14 @@ nxc ldap $target -u "$username" -p "$password" --dc-list
 echo "Enumerate Domain Trusts"
 nxc ldap $target -u "$username" -p "$password" M enum_trusts
 
-
 echo "Computers with the flag trusted for delegation"
 nxc ldap $target -u "$username" -p "$password" --trusted-for-delegation
 
 echo "Machine Account Quota"
 nxc ldap $target -u "$username" -p "$password" -M maq
+
+echo "Check LDAP Signing"
+nxc ldap $target -u "$username" -p "$password" -M ldap-checker
 
 echo "Check User Descriptions for Passwords"
 nxc ldap $target -u "$username" -p "$password" -M get-desc-users -o FILTER=pass
@@ -56,7 +58,6 @@ nxc ldap $target -u "$username" -p "$password" -M get-desc-users -o FILTER=serv
 
 echo "Scan Domain Controller Sysvol and Netlogon for interesting files"
 nxc ldap $target -u "$username" -p "$password" -M spider_plus
-
 
 echo "Run Bloodhound Ingester"
 nxc ldap $target -u "$username" -p "$password" --bloodhound --collection ALL
