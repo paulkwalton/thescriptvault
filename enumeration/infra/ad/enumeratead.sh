@@ -51,12 +51,19 @@ echo "Check LDAP Signing"
 nxc ldap $target -u "$username" -p "$password" -M ldap-checker
 
 echo "Check User Descriptions for Passwords"
+echo "Check User Descriptions for pass*"
 nxc ldap $target -u "$username" -p "$password" -M get-desc-users -o FILTER=pass
+echo "Check User Descriptions for temp*"
 nxc ldap $target -u "$username" -p "$password" -M get-desc-users -o FILTER=temp
+echo "Check User Descriptions for del*"
 nxc ldap $target -u "$username" -p "$password" -M get-desc-users -o FILTER=del
+echo "Check User Descriptions for cred*"
 nxc ldap $target -u "$username" -p "$password" -M get-desc-users -o FILTER=cred
+echo "Check User Descriptions for admin*"
 nxc ldap $target -u "$username" -p "$password" -M get-desc-users -o FILTER=admin
+echo "Check User Descriptions for log*"
 nxc ldap $target -u "$username" -p "$password" -M get-desc-users -o FILTER=log
+echo "Check User Descriptions for serv*"
 nxc ldap $target -u "$username" -p "$password" -M get-desc-users -o FILTER=serv
 
 echo "Scan Domain Controller Sysvol and Netlogon for interesting files"
