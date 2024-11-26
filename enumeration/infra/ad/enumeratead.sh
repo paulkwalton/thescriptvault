@@ -30,6 +30,9 @@ enumerate_group "Group Policy Creator Owners"
 enumerate_group "Denied RODC Password Replication Group"
 enumerate_group "DnsAdmins"
 
+echo "Enumerate Active Users"
+nxc ldap $target -u "$username" -p "$password" --active-users
+
 echo "Enumerate Kerberoastable Accounts"
 nxc ldap $target -u "$username" -p "$password" --kerberoasting kerberoasting.txt
 
