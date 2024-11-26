@@ -67,7 +67,7 @@ echo "Check User Descriptions for serv*"
 nxc ldap $target -u "$username" -p "$password" -M get-desc-users -o FILTER=serv
 
 echo "Scan Domain Controller Sysvol and Netlogon for interesting files"
-nxc ldap $target -u "$username" -p "$password" -M spider_plus
+nxc smb $target -u "$username" -p "$password" -M spider_plus
 
 echo "Run Bloodhound Ingester"
 nxc ldap $target -u "$username" -p "$password" --bloodhound --collection ALL
