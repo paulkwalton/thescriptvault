@@ -51,6 +51,9 @@ nxc ldap $target -u "$username" -p "$password" --trusted-for-delegation
 echo "Machine Account Quota"
 nxc ldap $target -u "$username" -p "$password" -M maq
 
+echo "Enumerate any Pre2k Machines"
+nxc ldap $target -u "$username" -p "$password" -M pre2k
+
 echo "Check LDAP Signing"
 nxc ldap $target -u "$username" -p "$password" -M ldap-checker
 
