@@ -29,6 +29,7 @@ enumerate_group "Group Policy Creator Owners"
 # Enumerate other important groups
 enumerate_group "Denied RODC Password Replication Group"
 enumerate_group "DnsAdmins"
+enumerate_group "Event Log Readers"
 
 echo "Enumerate Active Users"
 nxc ldap $target -u "$username" -p "$password" --active-users
