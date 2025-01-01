@@ -184,7 +184,8 @@ sudo git clone https://github.com/AlessandroZ/LaZagne.git /opt/lazagne
 # Install BloodHound and SharpHound
 echo "Getting SharpHound..."
 sudo git clone https://github.com/BloodHoundAD/SharpHound.git /opt/sharphound
-# Install CherryTree
+# Install HoaxShell
+sudo git clone https://github.com/t3l3machus/hoaxshell.git /opt/hoaxshell
 # Automated Cleanup and Maintenance
 echo "Running apt cleanup..."
 sudo apt autoremove -y
