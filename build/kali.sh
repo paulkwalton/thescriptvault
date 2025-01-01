@@ -185,10 +185,7 @@ sudo git clone https://github.com/AlessandroZ/LaZagne.git /opt/lazagne
 echo "Getting SharpHound..."
 sudo git clone https://github.com/BloodHoundAD/SharpHound.git /opt/sharphound
 # Install HoaxShell
-git clone https://github.com/t3l3machus/hoaxshell
-cd ./hoaxshell
-sudo pip3 install -r requirements.txt
-chmod +x hoaxshell.py
+sudo git clone https://github.com/t3l3machus/hoaxshell /opt/hoaxshell
 # Automated Cleanup and Maintenance
 echo "Running apt cleanup..."
 sudo apt autoremove -y
