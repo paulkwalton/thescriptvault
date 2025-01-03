@@ -63,64 +63,75 @@ echo "Kali Linux hardening completed."
 # Kali Hardening Section <End>
 
 # Install additional packages that are not part of kali-linux-default
-echo "Installing additional packages..."
-additional_packages=(
-  default-jdk
-  build-essential
-  windows-binaries
-  sshuttle
-  openssh-server
-  certipy-ad
-  jq
-  macchanger
-  python3-impacket
-  git
-  netcat-traditional
-  tilix
-  sqlmap
-  gobuster
-  iputils-ping
-  dirbuster
-  dirb
-  nano
-  nikto
-  sublist3r
-  zeek
-  net-tools
-  exploitdb
-  novnc
-  tcpdump
-  msfpc
-  smbclient
-  lldpd
-  enum4linux
-  default-mysql-client
-  snapd
-  prips
-  dirsearch
-  pip
-  rdesktop
-  seclists
-  dnsrecon
-  jython
-  sqlitebrowser
-  hashid
-  spray
-  responder
-  yersinia
-  postgresql
-  auditd
-  audispd-plugins
-  golang-go
-  libpcap-dev
-  sshpass
-  eyewitness
-  hping3
-  sprayhound
-  spray
-  goshs
-  filezilla
-)
+sudo apt install -y default-jdk
+sudo apt install -y build-essential
+# windows-binaries is not a standard package. You might be looking for wine or other tools.
+# Example for wine:
+sudo apt install -y wine
+sudo apt install -y sshuttle
+sudo apt install -y openssh-server
+# certipy-ad is a Python package, so you'd use pip:
+sudo apt install -y python3-pip
+sudo pip3 install certipy-ad
+sudo apt install -y jq
+sudo apt install -y macchanger
+sudo apt install -y python3-impacket
+sudo apt install -y git
+sudo apt install -y netcat-traditional
+sudo apt install -y tilix
+sudo apt install -y sqlmap
+sudo apt install -y gobuster
+sudo apt install -y iputils-ping
+# dirbuster is not in standard repos. Consider using dirb or dirsearch.
+sudo apt install -y dirb
+sudo apt install -y nano
+sudo apt install -y nikto
+# sublist3r is a Python package:
+sudo pip3 install sublist3r
+sudo apt install -y zeek
+sudo apt install -y net-tools
+# exploitdb is usually installed via searchsploit from the Metasploit Framework:
+# Install Metasploit:
+sudo apt install -y metasploit-framework
+sudo apt install -y novnc
+sudo apt install -y tcpdump
+# msfpc is not a package, it is a script. You'd download and execute it.
+sudo apt install -y smbclient
+sudo apt install -y lldpd
+sudo apt install -y enum4linux
+sudo apt install -y default-mysql-client
+sudo apt install -y snapd
+sudo apt install -y prips
+# dirsearch is a Python package:
+sudo pip3 install dirsearch
+# pip is already installed as part of python3-pip above.
+sudo apt install -y rdesktop
+# seclists is usually downloaded from GitHub.
+sudo apt install -y dnsrecon
+sudo apt install -y jython
+sudo apt install -y sqlitebrowser
+# hashid is a Python package:
+sudo pip3 install hashid
+# spray is a Python package:
+sudo pip3 install spray
+sudo apt install -y responder
+sudo apt install -y yersinia
+sudo apt install -y postgresql
+sudo apt install -y auditd
+sudo apt install -y audispd-plugins
+sudo apt install -y golang-go
+sudo apt install -y libpcap-dev
+sudo apt install -y sshpass
+# eyewitness is a Python package:
+sudo pip3 install eyewitness
+sudo apt install -y hping3
+# sprayhound is not a standard package.
+# spray is already installed above.
+# goshs is not a standard package.
+sudo apt install -y filezilla
+sudo apt install -y pwsh
+
+
 
 sudo apt install -y "${additional_packages[@]}"
 sudo systemctl enable ssh.service
