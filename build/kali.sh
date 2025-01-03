@@ -197,7 +197,9 @@ echo "Getting SharpHound..."
 sudo git clone https://github.com/BloodHoundAD/SharpHound.git /opt/sharphound
 # Install HoaxShell
 sudo git clone https://github.com/t3l3machus/hoaxshell /opt/hoaxshell
-# Automated Cleanup and Maintenance
+# Install Invoke Obfuscation
+sudo git clone https://github.com/danielbohannon/Invoke-Obfuscation.git /opt/invoke-obfuscation
+
 echo "Running apt cleanup..."
 sudo apt autoremove -y
 sudo apt clean
