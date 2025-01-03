@@ -129,7 +129,7 @@ sudo apt install -y hping3
 # spray is already installed above.
 # goshs is not a standard package.
 sudo apt install -y filezilla
-sudo apt install -y pwsh
+sudo apt install -y powershell
 
 
 
