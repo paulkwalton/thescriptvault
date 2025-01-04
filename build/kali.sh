@@ -130,10 +130,10 @@ sudo apt install -y hping3
 # goshs is not a standard package.
 sudo apt install -y filezilla
 sudo apt install -y powershell
+apt install ligolo-ng -y
 
 
 
-sudo apt install -y "${additional_packages[@]}"
 sudo systemctl enable ssh.service
 sudo systemctl start ssh.service
 sudo service lldpd start
