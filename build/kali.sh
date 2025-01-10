@@ -199,6 +199,7 @@ sudo git clone https://github.com/BloodHoundAD/SharpHound.git /opt/sharphound
 sudo git clone https://github.com/t3l3machus/hoaxshell /opt/hoaxshell
 # Install Invoke Obfuscation
 sudo git clone https://github.com/danielbohannon/Invoke-Obfuscation.git /opt/invoke-obfuscation
+sudo git clone https://github.com/dafthack/GraphRunner.git /opt/graphrunner
 
 echo "Running apt cleanup..."
 sudo apt autoremove -y
