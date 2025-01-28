@@ -3,7 +3,7 @@
 # Update and Upgrade Kali Linux
 echo "Updating and upgrading Kali Linux..."
 sudo apt update -y
-sudo apt full-upgrade -y
+sudo apt upgrade -y
 
 # Install Sliver C2
 echo "Installing Sliver C2..."
@@ -130,9 +130,10 @@ sudo apt install -y hping3
 # goshs is not a standard package.
 sudo apt install -y filezilla
 sudo apt install -y powershell
-apt install ligolo-ng -y
-
-
+sudo apt install ligolo-ng -y
+sudo apt install wine -y
+sudo apt install winetricks -y
+sudo apt install nuclei -y 
 
 sudo systemctl enable ssh.service
 sudo systemctl start ssh.service
@@ -200,6 +201,7 @@ sudo git clone https://github.com/t3l3machus/hoaxshell /opt/hoaxshell
 # Install Invoke Obfuscation
 sudo git clone https://github.com/danielbohannon/Invoke-Obfuscation.git /opt/invoke-obfuscation
 sudo git clone https://github.com/dafthack/GraphRunner.git /opt/graphrunner
+sudo git clone https://github.com/OmerYa/Invisi-Shell.git /opt/invisi-shell
 
 echo "Running apt cleanup..."
 sudo apt autoremove -y
@@ -219,6 +221,8 @@ sudo wget -O /opt/adtools/windapsearch https://github.com/ropnop/go-windapsearch
 sudo wget -O /opt/ruler-linux64 https://github.com/sensepost/ruler/releases/download/2.4.1/ruler-linux64
 sudo wget -O /opt/pingcastle https://github.com/netwrix/pingcastle/releases/download/3.3.0.1/PingCastle_3.3.0.1.zip
 sudo curl https://i.jpillora.com/chisel! | bash
+pip install pysmb --break-system-packages
+
 
 # Configure and compile KWProcessor
 echo "Configuring KWProcessor..."
@@ -229,6 +233,12 @@ sudo make
 # Install Python packages
 echo "Installing Python packages..."
 sudo pip install mitm6 pyftpdlib Cython python-libpcap
+
+# Install Empire C2
+git clone --recursive https://github.com/BC-SECURITY/Empire.git
+cd Empire
+./setup/checkout-latest-tag.sh
+./ps-empire install -y
 
 # Install Ngrok
 curl -sSL https://ngrok-agent.s3.amazonaws.com/ngrok.asc \
