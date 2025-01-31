@@ -99,6 +99,7 @@ git clone https://github.com/t3l3machus/hoaxshell.git
 git clone https://github.com/dafthack/GraphRunner.git
 git clone https://github.com/OmerYa/Invisi-Shell.git
 git clone https://github.com/NetSPI/PowerHuntShares.git
+git clone https://github.com/itm4n/PrivescCheck.git
 
 Invoke-WebRequest -Uri 'https://github.com/netwrix/pingcastle/releases/download/3.3.0.1/PingCastle_3.3.0.1.zip' -OutFile 'C:\tools\PingCastle_3.3.0.1.zip'
 
