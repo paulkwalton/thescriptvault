@@ -15,7 +15,7 @@ $wingetPackages = @(
     "VMware.HorizonClient", "Telerik.Fiddler.Everywhere", "Insecure.Nmap", "WinSCP.WinSCP",
     "TorProject.TorBrowser", "Microsoft.Sysinternals.PsTools", "Microsoft.Sysinternals.ProcessMonitor",
     "Microsoft.Sysinternals.ProcessExplorer", "Microsoft.Sysinternals.BGInfo", "Microsoft.Sqlcmd",
-    "Microsoft.AzureDataStudio", "Microsoft.Azure.StorageExplorer", "Microsoft.Azure.QuickReview","Docker.DockerDesktop","rejetto.hfs","Initex.Proxifier")
+    "Microsoft.AzureDataStudio", "Microsoft.Azure.StorageExplorer", "Microsoft.Azure.QuickReview","Docker.DockerDesktop","rejetto.hfs","Initex.Proxifier","PuTTY.PuTTY","Postman.Postman")
 
 # Install each package, handling errors individually
 foreach ($package in $wingetPackages) {
@@ -99,7 +99,9 @@ git clone https://github.com/t3l3machus/hoaxshell.git
 git clone https://github.com/dafthack/GraphRunner.git
 git clone https://github.com/OmerYa/Invisi-Shell.git
 git clone https://github.com/NetSPI/PowerHuntShares.git
-git clone https://github.com/itm4n/PrivescCheck.git
+git clone https://github.com/synacktiv/GPOddity.git
+git clone https://github.com/RythmStick/AMSITrigger.git
+git clone https://github.com/cybersectroll/TrollAMSI.git
 
 Invoke-WebRequest -Uri 'https://github.com/netwrix/pingcastle/releases/download/3.3.0.1/PingCastle_3.3.0.1.zip' -OutFile 'C:\tools\PingCastle_3.3.0.1.zip'
 
