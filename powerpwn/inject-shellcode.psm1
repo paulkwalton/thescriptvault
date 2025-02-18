@@ -65,4 +65,3 @@ function Invoke-InMemoryShellcode {
     }
 }
 
-Export-ModuleMember -Function Invoke-InMemoryShellcode
