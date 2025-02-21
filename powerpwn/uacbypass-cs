@@ -45,7 +45,7 @@ namespace TestLab
             {
                 // In a test lab, a little humor never hurt:
                 // “Whoops – even our high integrity DLL sometimes can’t keep secrets.”
-                File.WriteAllText(@"C:\Temp\whoami_output.txt", $"Error executing command: {ex.Message}");
+                File.WriteAllText(@"C:\Temp\whoami_output.txt", "Error executing command: " + ex.Message);
             }
         }
     }
