@@ -25,6 +25,9 @@ winget install -e --id PortSwigger.BurpSuite.Professional
 winget install -e --id Insecure.Nmap
 winget install -e --id WiresharkFoundation.Wireshark
 winget install -e --id Docker.DockerDesktop
+winget install -e --id Git.Git
+winget install -e --id=Microsoft.Sysinternals.Suite
+
 
 winget install -e --id Microsoft.AzureDataStudio
 winget install -e --id Microsoft.Azure.StorageExplorer
