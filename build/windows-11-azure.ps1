@@ -1,15 +1,6 @@
 # Refactored Windows Setup Script
 # ---------------------------------------------
 
-
-function Test-Admin {
-    $isAdmin = ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator")
-    if (-not $isAdmin) {
-        Write-Host "[X] This script must be run as administrator." -ForegroundColor Red
-        exit 1
-    }
-}
-
 function Disable-Firewall-And-Configure-System {
     Write-Host "`n[+] Disabling firewalls and configuring system settings..." -ForegroundColor Cyan
     try {
