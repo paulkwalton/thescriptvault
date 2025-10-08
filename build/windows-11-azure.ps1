@@ -51,7 +51,6 @@ function Install-Winget-Packages {
 # Main Script Execution
 Test-Admin
 Disable-Firewall-And-Configure-System
-Install-RSAT-AD
 Test-Winget
 
 $wingetPackages = @(
