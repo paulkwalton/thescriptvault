@@ -31,5 +31,10 @@ Disable-Firewall-And-Configure-System
 winget install -e --id Iterate.Cyberduck
 winget install -e --id Tenable.Nessus
 winget install -e --id PortSwigger.BurpSuite.Professional
+winget install -e --id Insecure.Nmap
+
+winget install -e --id Microsoft.AzureDataStudio
+winget install -e --id Microsoft.Azure.StorageExplorer
+winget install -e --id Microsoft.AzureCLI
 
 Write-Host "`n[+] Script finished." -ForegroundColor Yellow
