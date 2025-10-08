@@ -16,17 +16,63 @@ Get-WindowsCapability -Name RSAT.ActiveDirectory* -Online | Where-Object State -
 
 # Winget Package Installation
 $wingetPackages = @(
-    "microsoft.azurecli", "microsoft.powertoys", "microsoft.powershell", "microsoft.windowsterminal", "Microsoft.Azure.StorageExplorer", "Microsoft.RemoteDesktopClient", "vscodium", "7zip.7zip", "PuTTY.PuTTY", "wireshark", "greenshot", "windirstat","google.chrome", "Yubico.YubikeyManager", "rufus.rufus", "Robware.RVTools", "PortSwigger.BurpSuite.Professional", "Git.Git", "DominikReichl.KeePass", "Citrix.Workspace", "Microsoft.SQLServerManagementStudio", "Tenable.Nessus", "RealVNC.VNCViewer", "Apache.OpenOffice", "SmartSoft.SmartFTP", "Notepad++.Notepad++", "Docker.DockerDesktop", "Microsoft.Sysinternals", "Insecure.Nmap", "WinSCP.WinSCP", "TorProject.TorBrowser", "Microsoft.Sysinternals.PsTools", "Microsoft.Sysinternals.ProcessMonitor", "Microsoft.Sysinternals.ProcessExplorer", "Microsoft.Sqlcmd", "Microsoft.AzureDataStudio", "Microsoft.Azure.QuickReview", "rejetto.hfs", "Initex.Proxifier", "Microsoft.AzCopy", "Cyberduck.Cyberduck", "Mozilla.FirefoxESR", "HeidiSQL.HeidiSQL", "mh.hxd", "KiTTY.KiTTY", "Kubernetes.kubectl","Terminals.Terminals"
+    "microsoft.azurecli",
+    "microsoft.powertoys",
+    "microsoft.powershell",
+    "microsoft.windowsterminal",
+    "Microsoft.Azure.StorageExplorer",
+    "Microsoft.RemoteDesktopClient",
+    "vscodium",
+    "7zip.7zip",
+    "PuTTY.PuTTY",
+    "wireshark",
+    "greenshot",
+    "windirstat",
+    "google.chrome",
+    "Yubico.YubikeyManager",
+    "rufus.rufus",
+    "Robware.RVTools",
+    "PortSwigger.BurpSuite.Professional",
+    "Git.Git",
+    "DominikReichl.KeePass",
+    "Citrix.Workspace",
+    "Microsoft.SQLServerManagementStudio",
+    "Tenable.Nessus",
+    "RealVNC.VNCViewer",
+    "Apache.OpenOffice",
+    "SmartSoft.SmartFTP",
+    "Notepad++.Notepad++",
+    "Docker.DockerDesktop",
+    "Microsoft.Sysinternals",
+    "Insecure.Nmap",
+    "WinSCP.WinSCP",
+    "TorProject.TorBrowser",
+    "Microsoft.Sysinternals.PsTools",
+    "Microsoft.Sysinternals.ProcessMonitor",
+    "Microsoft.Sysinternals.ProcessExplorer",
+    "Microsoft.Sqlcmd",
+    "Microsoft.AzureDataStudio",
+    "Microsoft.Azure.QuickReview",
+    "rejetto.hfs",
+    "Initex.Proxifier",
+    "Microsoft.AzCopy",
+    "Cyberduck.Cyberduck",
+    "Mozilla.FirefoxESR",
+    "HeidiSQL.HeidiSQL",
+    "mh.hxd",
+    "KiTTY.KiTTY",
+    "Kubernetes.kubectl",
+    "Terminals.Terminals"
 )
 
 Write-Host "`n[+] Installing packages via winget..." -ForegroundColor Cyan
 foreach ($package in $wingetPackages) {
     try {
-        Write-Host "[>] Installing $($package)..." -ForegroundColor White
+        Write-Host "[>] Installing $package..." -ForegroundColor White
         winget install $package --accept-source-agreements -e --accept-package-agreements
-        Write-Host "[OK] $($package) installed successfully." -ForegroundColor Green
-    } catch {
-        Write-Host "[X] Error installing $($package): $($_.Exception.Message)" -ForegroundColor Red
+        Write-Host "[OK] $package installed successfully." -ForegroundColor Green
+    }
+    catch {
+        Write-Host "[X] Error installing $package: $($_.Exception.Message)" -ForegroundColor Red
     }
 }
-
