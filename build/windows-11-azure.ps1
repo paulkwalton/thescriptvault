@@ -1,6 +1,9 @@
 # Refactored Windows Setup Script
 # ---------------------------------------------
 
+
+
+
 function Disable-Firewall-And-Configure-System {
     Write-Host "`n[+] Disabling firewalls and configuring system settings..." -ForegroundColor Cyan
     try {
