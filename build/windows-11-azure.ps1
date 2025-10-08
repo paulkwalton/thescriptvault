@@ -1,17 +1,3 @@
-# ===================================================================
-#                      SYSTEM SETUP SCRIPT
-# ===================================================================
-
-# 1. VERIFY SCRIPT IS RUNNING AS ADMINISTRATOR
-# -------------------------------------------------------------------
-Write-Host "[+] Checking for Administrator privileges..." -ForegroundColor Cyan
-if (-NOT ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
-    Write-Warning "This script must be run as an Administrator. Please re-launch in an elevated PowerShell window."
-    Read-Host "Press Enter to exit..."
-    exit
-}
-Write-Host "[OK] Administrator privileges confirmed." -ForegroundColor Green
-
 # 2. CONFIGURE SYSTEM SETTINGS
 # -------------------------------------------------------------------
 Write-Host "`n[+] Disabling firewalls and configuring system settings..." -ForegroundColor Cyan
