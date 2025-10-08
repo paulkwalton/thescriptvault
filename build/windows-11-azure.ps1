@@ -54,12 +54,8 @@ Disable-Firewall-And-Configure-System
 Test-Winget
 
 $wingetPackages = @(
-    "7zip.7zip",
-    "Apache.OpenOffice",
-    "Citrix.Workspace",
     "Cyberduck.Cyberduck",
     "Docker.DockerDesktop",
-    "DominikReichl.KeePass",
     "Git.Git",
     "Google.Chrome",
     "Greenshot.Greenshot",
@@ -75,13 +71,10 @@ $wingetPackages = @(
     "Microsoft.AzCopy",
     "Microsoft.PowerShell",
     "Microsoft.PowerToys",
-    "Microsoft.RemoteDesktopClient",
     "Microsoft.SQLServerManagementStudio",
     "Microsoft.Sqlcmd",
     "Microsoft.Sysinternals.SysinternalsSuite",
     "Microsoft.WindowsTerminal",
-    "Mozilla.FirefoxESR",
-    "Notepad++.Notepad++",
     "PortSwigger.BurpSuite.Professional",
     "PuTTY.PuTTY",
     "RealVNC.VNCViewer",
@@ -91,12 +84,9 @@ $wingetPackages = @(
     "SmartSoft.SmartFTP",
     "Tenable.Nessus",
     "Terminals.Terminals",
-    "TorProject.TorBrowser",
-    "VSCodium.VSCodium",
     "Wireshark.Wireshark",
     "WinDirStat.WinDirStat",
     "WinSCP.WinSCP",
-    "Yubico.YubikeyManager"
 )
 
 Install-Winget-Packages -Packages $wingetPackages
