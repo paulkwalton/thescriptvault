@@ -84,9 +84,8 @@ $wingetPackages = @(
     "SmartSoft.SmartFTP",
     "Tenable.Nessus",
     "Terminals.Terminals",
-    "Wireshark.Wireshark",
-    "WinDirStat.WinDirStat",
-    "WinSCP.WinSCP"
+    "Wireshark.Wireshark"
+
 )
 
 Install-Winget-Packages -Packages $wingetPackages
