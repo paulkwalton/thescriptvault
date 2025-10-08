@@ -1,78 +1,111 @@
-# Disable firewall and set system options
+# ===================================================================
+#                      SYSTEM SETUP SCRIPT
+# ===================================================================
+
+# 1. VERIFY SCRIPT IS RUNNING AS ADMINISTRATOR
+# -------------------------------------------------------------------
+Write-Host "[+] Checking for Administrator privileges..." -ForegroundColor Cyan
+if (-NOT ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
+    Write-Warning "This script must be run as an Administrator. Please re-launch in an elevated PowerShell window."
+    Read-Host "Press Enter to exit..."
+    exit
+}
+Write-Host "[OK] Administrator privileges confirmed." -ForegroundColor Green
+
+# 2. CONFIGURE SYSTEM SETTINGS
+# -------------------------------------------------------------------
 Write-Host "`n[+] Disabling firewalls and configuring system settings..." -ForegroundColor Cyan
-Set-NetFirewallProfile -Profile Domain,Private,Public -Enabled False
-powercfg /s 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c
-Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server' -Name "fDenyTSConnections" -Value 0
-Write-Host "[OK] Firewall and power settings updated." -ForegroundColor Green
+try {
+    Set-NetFirewallProfile -Profile Domain,Private,Public -Enabled False -ErrorAction Stop
+    # Set power scheme to 'High performance'
+    powercfg /s 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c
+    # Enable Remote Desktop connections
+    Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server' -Name "fDenyTSConnections" -Value 0 -ErrorAction Stop
+    Write-Host "[OK] Firewall, power, and RDP settings updated." -ForegroundColor Green
+}
+catch {
+    Write-Host "[X] Failed to configure system settings: $($_.Exception.Message)" -ForegroundColor Red
+}
 
-# Install AD modules
+# 3. INSTALL ACTIVE DIRECTORY (RSAT) MODULES
+# -------------------------------------------------------------------
 Write-Host "`n[+] Installing Active Directory modules..." -ForegroundColor Cyan
-Get-WindowsCapability -Name RSAT.ActiveDirectory* -Online | Add-WindowsCapability -Online
-Write-Host "[OK] AD modules installed." -ForegroundColor Green
+try {
+    Get-WindowsCapability -Name RSAT.ActiveDirectory* -Online | Add-WindowsCapability -Online -ErrorAction Stop
+    Write-Host "[OK] AD modules installation command sent." -ForegroundColor Green
+    # Verify installation
+    Write-Host "[+] Verifying AD module installation..." -ForegroundColor Cyan
+    Get-WindowsCapability -Name RSAT.ActiveDirectory* -Online | Where-Object State -eq "Installed"
+}
+catch {
+    Write-Host "[X] Failed to install AD Modules: $($_.Exception.Message)" -ForegroundColor Red
+}
 
-# Verify AD module installation
-Write-Host "[+] Verifying AD module installation..." -ForegroundColor Cyan
-Get-WindowsCapability -Name RSAT.ActiveDirectory* -Online | Where-Object State -eq "Installed"
-
-# Winget Package Installation
+# 4. DEFINE WINGET PACKAGES
+# -------------------------------------------------------------------
+# This list is formatted for clarity and easy editing.
 $wingetPackages = @(
-    "microsoft.azurecli",
-    "microsoft.powertoys",
-    "microsoft.powershell",
-    "microsoft.windowsterminal",
-    "Microsoft.Azure.StorageExplorer",
-    "Microsoft.RemoteDesktopClient",
-    "vscodium",
     "7zip.7zip",
-    "PuTTY.PuTTY",
-    "wireshark",
-    "greenshot",
-    "windirstat",
-    "google.chrome",
-    "Yubico.YubikeyManager",
-    "rufus.rufus",
-    "Robware.RVTools",
-    "PortSwigger.BurpSuite.Professional",
-    "Git.Git",
-    "DominikReichl.KeePass",
-    "Citrix.Workspace",
-    "Microsoft.SQLServerManagementStudio",
-    "Tenable.Nessus",
-    "RealVNC.VNCViewer",
     "Apache.OpenOffice",
-    "SmartSoft.SmartFTP",
-    "Notepad++.Notepad++",
-    "Docker.DockerDesktop",
-    "Microsoft.Sysinternals",
-    "Insecure.Nmap",
-    "WinSCP.WinSCP",
-    "TorProject.TorBrowser",
-    "Microsoft.Sysinternals.PsTools",
-    "Microsoft.Sysinternals.ProcessMonitor",
-    "Microsoft.Sysinternals.ProcessExplorer",
-    "Microsoft.Sqlcmd",
-    "Microsoft.AzureDataStudio",
-    "Microsoft.Azure.QuickReview",
-    "rejetto.hfs",
-    "Initex.Proxifier",
-    "Microsoft.AzCopy",
+    "Citrix.Workspace",
     "Cyberduck.Cyberduck",
-    "Mozilla.FirefoxESR",
+    "Docker.DockerDesktop",
+    "DominikReichl.KeePass",
+    "Git.Git",
+    "Google.Chrome",
+    "Greenshot.Greenshot",
     "HeidiSQL.HeidiSQL",
-    "mh.hxd",
+    "Insecure.Nmap",
+    "Initex.Proxifier",
     "KiTTY.KiTTY",
     "Kubernetes.kubectl",
-    "Terminals.Terminals"
+    "mh.hxd",
+    "Microsoft.Azure.StorageExplorer",
+    "Microsoft.AzureCLI",
+    "Microsoft.AzureDataStudio",
+    "Microsoft.AzCopy",
+    "Microsoft.PowerShell",
+    "Microsoft.PowerToys",
+    "Microsoft.RemoteDesktopClient",
+    "Microsoft.SQLServerManagementStudio",
+    "Microsoft.Sqlcmd",
+    "Microsoft.Sysinternals.SysinternalsSuite",
+    "Microsoft.WindowsTerminal",
+    "Mozilla.FirefoxESR",
+    "Notepad++.Notepad++",
+    "PortSwigger.BurpSuite.Professional",
+    "PuTTY.PuTTY",
+    "RealVNC.VNCViewer",
+    "rejetto.hfs",
+    "Robware.RVTools",
+    "Rufus.Rufus",
+    "SmartSoft.SmartFTP",
+    "Tenable.Nessus",
+    "Terminals.Terminals",
+    "TorProject.TorBrowser",
+    "VSCodium.VSCodium",
+    "Wireshark.Wireshark",
+    "WinDirStat.WinDirStat",
+    "WinSCP.WinSCP",
+    "Yubico.YubikeyManager"
 )
 
-Write-Host "`n[+] Installing packages via winget..." -ForegroundColor Cyan
+# 5. INSTALL PACKAGES VIA WINGET
+# -------------------------------------------------------------------
+Write-Host "`n[+] Installing $($wingetPackages.Count) packages via winget..." -ForegroundColor Cyan
 foreach ($package in $wingetPackages) {
-    try {
-        Write-Host "[>] Installing $package..." -ForegroundColor White
-        winget install $package --accept-source-agreements -e --accept-package-agreements
-        Write-Host "[OK] $package installed successfully." -ForegroundColor Green
-    }
-    catch {
-        Write-Host "[X] Error installing $package: $($_.Exception.Message)" -ForegroundColor Red
+    Write-Host "[>] Attempting to install: $($package)..." -ForegroundColor White
+    
+    # Use --id to be specific and --silent to prevent installers from hanging the script.
+    winget install --id $package --silent --accept-source-agreements --accept-package-agreements
+
+    # Check the exit code of the last command. 0 typically means success.
+    # This is more reliable than try/catch for external programs like winget.
+    if ($LASTEXITCODE -eq 0) {
+        Write-Host "[OK] Successfully installed $($package)." -ForegroundColor Green
+    } else {
+        Write-Host "[X] Error installing $($package). Winget exited with code: $LASTEXITCODE" -ForegroundColor Red
     }
 }
+
+Write-Host "`n[+] Script finished." -ForegroundColor Yellow
