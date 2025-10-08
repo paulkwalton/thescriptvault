@@ -38,11 +38,3 @@ foreach ($package in $wingetPackages) {
     }
 }
 
-
-# Refresh environment variables
-Write-Host "`n[+] Refreshing environment variables..." -ForegroundColor Cyan
-[Environment]::SetEnvironmentVariable("PATH", [Environment]::GetEnvironmentVariable("PATH", "Machine"), "Machine")
-[Environment]::SetEnvironmentVariable("PATH", [Environment]::GetEnvironmentVariable("PATH", "User"), "User")
-$env:PATH = [System.Environment]::GetEnvironmentVariable("PATH","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("PATH","User")
-Write-Host "[OK] Environment variables refreshed." -ForegroundColor Green
-
