@@ -1,35 +1,84 @@
-# 2. CONFIGURE SYSTEM SETTINGS
-# -------------------------------------------------------------------
-Write-Host "`n[+] Disabling firewalls and configuring system settings..." -ForegroundColor Cyan
-try {
-    Set-NetFirewallProfile -Profile Domain,Private,Public -Enabled False -ErrorAction Stop
-    # Set power scheme to 'High performance'
-    powercfg /s 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c
-    # Enable Remote Desktop connections
-    Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server' -Name "fDenyTSConnections" -Value 0 -ErrorAction Stop
-    Write-Host "[OK] Firewall, power, and RDP settings updated." -ForegroundColor Green
-}
-catch {
-    Write-Host "[X] Failed to configure system settings: $($_.Exception.Message)" -ForegroundColor Red
+# Refactored Windows Setup Script
+# ---------------------------------------------
+
+function Test-Admin {
+    $isAdmin = ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator")
+    if (-not $isAdmin) {
+        Write-Host "[X] This script must be run as administrator." -ForegroundColor Red
+        exit 1
+    }
 }
 
-# 3. INSTALL ACTIVE DIRECTORY (RSAT) MODULES
-# -------------------------------------------------------------------
-Write-Host "`n[+] Installing Active Directory modules..." -ForegroundColor Cyan
-try {
-    Get-WindowsCapability -Name RSAT.ActiveDirectory* -Online | Add-WindowsCapability -Online -ErrorAction Stop
-    Write-Host "[OK] AD modules installation command sent." -ForegroundColor Green
-    # Verify installation
-    Write-Host "[+] Verifying AD module installation..." -ForegroundColor Cyan
-    Get-WindowsCapability -Name RSAT.ActiveDirectory* -Online | Where-Object State -eq "Installed"
-}
-catch {
-    Write-Host "[X] Failed to install AD Modules: $($_.Exception.Message)" -ForegroundColor Red
+function Disable-Firewall-And-Configure-System {
+    Write-Host "`n[+] Disabling firewalls and configuring system settings..." -ForegroundColor Cyan
+    try {
+        Set-NetFirewallProfile -Profile Domain,Private,Public -Enabled False -ErrorAction Stop
+        powercfg /s SCHEME_MIN
+        Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server' -Name "fDenyTSConnections" -Value 0 -ErrorAction Stop
+        Write-Host "[OK] Firewall, power, and RDP settings updated." -ForegroundColor Green
+    }
+    catch {
+        Write-Host "[X] Failed to configure system settings: $($_.Exception.Message)" -ForegroundColor Red
+    }
 }
 
-# 4. DEFINE WINGET PACKAGES
-# -------------------------------------------------------------------
-# This list is formatted for clarity and easy editing.
+function Install-RSAT-AD {
+    Write-Host "`n[+] Installing Active Directory RSAT modules..." -ForegroundColor Cyan
+    try {
+        $adCaps = Get-WindowsCapability -Name RSAT.ActiveDirectory* -Online
+        foreach ($cap in $adCaps) {
+            if ($cap.State -ne "Installed") {
+                Add-WindowsCapability -Online -Name $cap.Name -ErrorAction Stop
+                Write-Host "[OK] Installed: $($cap.Name)" -ForegroundColor Green
+            } else {
+                Write-Host "[OK] Already installed: $($cap.Name)" -ForegroundColor Yellow
+            }
+        }
+        Write-Host "[+] Verifying AD module installation..." -ForegroundColor Cyan
+        $adCaps = Get-WindowsCapability -Name RSAT.ActiveDirectory* -Online | Where-Object State -eq "Installed"
+        if ($adCaps) {
+            Write-Host "[OK] AD modules are installed." -ForegroundColor Green
+        } else {
+            Write-Host "[X] AD modules are NOT installed." -ForegroundColor Red
+        }
+    }
+    catch {
+        Write-Host "[X] Failed to install AD Modules: $($_.Exception.Message)" -ForegroundColor Red
+    }
+}
+
+function Test-Winget {
+    if (-not (Get-Command winget -ErrorAction SilentlyContinue)) {
+        Write-Host "[X] winget is not installed or not in PATH." -ForegroundColor Red
+        exit 1
+    }
+}
+
+function Install-Winget-Packages {
+    param([string[]]$Packages)
+    Write-Host "`n[+] Installing $($Packages.Count) packages via winget..." -ForegroundColor Cyan
+    foreach ($package in $Packages) {
+        Write-Host "[>] Attempting to install: $($package)..." -ForegroundColor White
+        $alreadyInstalled = winget list --id $package | Select-String $package
+        if ($alreadyInstalled) {
+            Write-Host "[OK] $($package) is already installed." -ForegroundColor Yellow
+            continue
+        }
+        winget install --id $package --silent --accept-source-agreements --accept-package-agreements
+        if ($LASTEXITCODE -eq 0) {
+            Write-Host "[OK] Successfully installed $($package)." -ForegroundColor Green
+        } else {
+            Write-Host "[X] Error installing $($package). Winget exited with code: $LASTEXITCODE" -ForegroundColor Red
+        }
+    }
+}
+
+# Main Script Execution
+Test-Admin
+Disable-Firewall-And-Configure-System
+Install-RSAT-AD
+Test-Winget
+
 $wingetPackages = @(
     "7zip.7zip",
     "Apache.OpenOffice",
@@ -76,22 +125,6 @@ $wingetPackages = @(
     "Yubico.YubikeyManager"
 )
 
-# 5. INSTALL PACKAGES VIA WINGET
-# -------------------------------------------------------------------
-Write-Host "`n[+] Installing $($wingetPackages.Count) packages via winget..." -ForegroundColor Cyan
-foreach ($package in $wingetPackages) {
-    Write-Host "[>] Attempting to install: $($package)..." -ForegroundColor White
-    
-    # Use --id to be specific and --silent to prevent installers from hanging the script.
-    winget install --id $package --silent --accept-source-agreements --accept-package-agreements
-
-    # Check the exit code of the last command. 0 typically means success.
-    # This is more reliable than try/catch for external programs like winget.
-    if ($LASTEXITCODE -eq 0) {
-        Write-Host "[OK] Successfully installed $($package)." -ForegroundColor Green
-    } else {
-        Write-Host "[X] Error installing $($package). Winget exited with code: $LASTEXITCODE" -ForegroundColor Red
-    }
-}
+Install-Winget-Packages -Packages $wingetPackages
 
 Write-Host "`n[+] Script finished." -ForegroundColor Yellow
