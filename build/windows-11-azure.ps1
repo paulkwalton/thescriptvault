@@ -22,31 +22,6 @@ function Disable-Firewall-And-Configure-System {
     }
 }
 
-function Install-RSAT-AD {
-    Write-Host "`n[+] Installing Active Directory RSAT modules..." -ForegroundColor Cyan
-    try {
-        $adCaps = Get-WindowsCapability -Name RSAT.ActiveDirectory* -Online
-        foreach ($cap in $adCaps) {
-            if ($cap.State -ne "Installed") {
-                Add-WindowsCapability -Online -Name $cap.Name -ErrorAction Stop
-                Write-Host "[OK] Installed: $($cap.Name)" -ForegroundColor Green
-            } else {
-                Write-Host "[OK] Already installed: $($cap.Name)" -ForegroundColor Yellow
-            }
-        }
-        Write-Host "[+] Verifying AD module installation..." -ForegroundColor Cyan
-        $adCaps = Get-WindowsCapability -Name RSAT.ActiveDirectory* -Online | Where-Object State -eq "Installed"
-        if ($adCaps) {
-            Write-Host "[OK] AD modules are installed." -ForegroundColor Green
-        } else {
-            Write-Host "[X] AD modules are NOT installed." -ForegroundColor Red
-        }
-    }
-    catch {
-        Write-Host "[X] Failed to install AD Modules: $($_.Exception.Message)" -ForegroundColor Red
-    }
-}
-
 function Test-Winget {
     if (-not (Get-Command winget -ErrorAction SilentlyContinue)) {
         Write-Host "[X] winget is not installed or not in PATH." -ForegroundColor Red
