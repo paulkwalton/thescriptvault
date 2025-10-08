@@ -1,5 +1,6 @@
 # Refactored Windows Setup Script
 # ---------------------------------------------
+winget source update --accept-source-agreements
 
 function Test-Admin {
     $isAdmin = ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator")
