@@ -86,7 +86,7 @@ $wingetPackages = @(
     "Terminals.Terminals",
     "Wireshark.Wireshark",
     "WinDirStat.WinDirStat",
-    "WinSCP.WinSCP",
+    "WinSCP.WinSCP"
 )
 
 Install-Winget-Packages -Packages $wingetPackages
