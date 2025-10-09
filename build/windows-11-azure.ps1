@@ -6,8 +6,8 @@
 #   3. (Optional) Disable firewall & tweak system (undoes some baseline protections)
 #   4. Install tooling
 #
-# NOTE: The baseline ZIP no longer bundles LGPO.exe. We attempt several known URLs.
-# If all fail, manually download the Security Compliance Toolkit and place LGPO.exe into:
+# NOTE: The baseline ZIP no longer bundles LGPO.exe. LGPO.exe is now fetched only from the provided GitHub link. No other sources are attempted.
+# If download fails, manually download the Security Compliance Toolkit and place LGPO.exe into:
 #   <...>\Windows 11 v25H2 Security Baseline\Scripts\Tools\LGPO.exe
 
 function Install-WindowsSecurityBaselineNonDomainJoined {
@@ -46,46 +46,23 @@ function Install-WindowsSecurityBaselineNonDomainJoined {
         if (-not (Test-Path $toolsDir)) { New-Item -ItemType Directory -Path $toolsDir | Out-Null }
         $lgpoExePath = Join-Path $toolsDir "LGPO.exe"
 
+        # --- AMENDED LOGIC: Always download LGPO.exe from the provided GitHub URL; do not try other sources ---
         if (-not (Test-Path $lgpoExePath)) {
-            Write-Host "[*] LGPO.exe not present. Attempting download..." -ForegroundColor DarkCyan
-            $candidateLgpoUrls = @(
-                # Known historical direct download links for LGPO
-                "https://download.microsoft.com/download/2/8/5/2857D59E-0B4E-4D4A-9C0D-6D1D03C0C6B8/LGPO.zip",
-                "https://download.microsoft.com/download/7/F/5/7F5DC3B5-DA5A-4969-9BB0-51B7427F7E70/LGPO.zip",
-                "https://aka.ms/lgpo"
-            )
-            $lgpoAcquired = $false
-            $tempLgpoDir = Join-Path $toolsDir "LGPO_Download"
-            if (Test-Path $tempLgpoDir) { Remove-Item $tempLgpoDir -Recurse -Force }
-            New-Item -ItemType Directory -Path $tempLgpoDir | Out-Null
-
-            foreach ($url in $candidateLgpoUrls) {
-                Write-Host "    -> Trying: $url" -ForegroundColor Gray
-                $zipCandidate = Join-Path $tempLgpoDir "LGPO.zip"
-                try {
-                    Invoke-WebRequest -Uri $url -OutFile $zipCandidate -UseBasicParsing -ErrorAction Stop
-                    if ((Get-Item $zipCandidate).Length -lt 40KB) {
-                        Write-Host "       Download too small, skipping." -ForegroundColor Yellow
-                        continue
-                    }
-                    Expand-Archive -Path $zipCandidate -DestinationPath $tempLgpoDir -Force -ErrorAction Stop
-                    $found = Get-ChildItem -Path $tempLgpoDir -Filter "LGPO.exe" -Recurse -ErrorAction SilentlyContinue | Select-Object -First 1
-                    if ($found) {
-                        Copy-Item $found.FullName $lgpoExePath -Force
-                        Write-Host "[OK] LGPO.exe acquired." -ForegroundColor Green
-                        $lgpoAcquired = $true
-                        break
-                    } else {
-                        Write-Host "       LGPO.exe not inside archive." -ForegroundColor Yellow
-                    }
-                }
-                catch {
-                    Write-Host "       Failed: $($_.Exception.Message)" -ForegroundColor Yellow
+            Write-Host "[*] LGPO.exe not present. Attempting to download from provided URL..." -ForegroundColor DarkCyan
+            $directLgpoUrl = "https://github.com/paulkwalton/thescriptvault/raw/refs/heads/main/build/LGPO.exe"
+            try {
+                Invoke-WebRequest -Uri $directLgpoUrl -OutFile $lgpoExePath -UseBasicParsing -ErrorAction Stop
+                if ((Test-Path $lgpoExePath) -and ((Get-Item $lgpoExePath).Length -gt 40KB)) {
+                    Write-Host "[OK] LGPO.exe acquired from provided URL." -ForegroundColor Green
+                } else {
+                    Write-Host "[X] LGPO.exe download failed or file too small." -ForegroundColor Red
+                    Write-Host "    Manual fix: Download Security Compliance Toolkit and place LGPO.exe in:" -ForegroundColor Red
+                    Write-Host "    $toolsDir" -ForegroundColor Red
+                    return
                 }
             }
-
-            if (-not $lgpoAcquired) {
-                Write-Host "[X] Could not automatically retrieve LGPO.exe." -ForegroundColor Red
+            catch {
+                Write-Host "[X] LGPO.exe download from provided URL failed: $($_.Exception.Message)" -ForegroundColor Red
                 Write-Host "    Manual fix: Download Security Compliance Toolkit and place LGPO.exe in:" -ForegroundColor Red
                 Write-Host "    $toolsDir" -ForegroundColor Red
                 return
@@ -93,6 +70,7 @@ function Install-WindowsSecurityBaselineNonDomainJoined {
         } else {
             Write-Host "[OK] LGPO.exe already present." -ForegroundColor Green
         }
+        # --- End amended logic ---
 
         Get-ChildItem -Path $scriptsDir -Recurse | Unblock-File -ErrorAction SilentlyContinue
 
