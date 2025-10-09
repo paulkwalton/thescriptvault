@@ -35,6 +35,34 @@ function Remove-UnwantedApps {
     Write-Host "[+] Bloatware removal complete." -ForegroundColor Yellow
 }
 
+function Disable-IPv6 {
+    Write-Host "`n[+] Disabling IPv6 on all network adapters..." -ForegroundColor Cyan
+    try {
+        # Disable IPv6 via registry (preferred method for full stack)
+        $regPath = "HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip6\Parameters"
+        $name = "DisabledComponents"
+        $value = 0xFF
+        if (-not (Test-Path $regPath)) {
+            New-Item -Path $regPath -Force | Out-Null
+        }
+        Set-ItemProperty -Path $regPath -Name $name -Value $value -Type DWord
+        Write-Host "[OK] Set DisabledComponents registry value to 0xFF." -ForegroundColor Green
+
+        # Optionally, disable IPv6 on all adapters (may be redundant, registry covers all)
+        Get-NetAdapter | ForEach-Object {
+            try {
+                Disable-NetAdapterBinding -Name $_.Name -ComponentID ms_tcpip6 -ErrorAction SilentlyContinue
+            } catch {
+                Write-Host "[!] Could not disable IPv6 on adapter $($_.Name): $($_.Exception.Message)" -ForegroundColor Yellow
+            }
+        }
+        Write-Host "[+] IPv6 disabling complete. A reboot may be required for changes to take full effect." -ForegroundColor Yellow
+    }
+    catch {
+        Write-Host "[X] Failed to disable IPv6: $($_.Exception.Message)" -ForegroundColor Red
+    }
+}
+
 function Allow-RDP-InboundFirewall {
     Write-Host "`n[+] Allowing inbound RDP through Windows Firewall..." -ForegroundColor Cyan
     try {
@@ -168,6 +196,9 @@ function Download-PentestTool {
 # -------------------------
 Remove-UnwantedApps
 
+# Disable IPv6 early in the process
+Disable-IPv6
+
 # Set region to United Kingdom (GeoId: 244) for winget/msstore compatibility
 Set-WinHomeLocation -GeoId 244
 
@@ -188,6 +219,7 @@ winget install -e --id Microsoft.AzureCLI --accept-package-agreements --accept-s
 winget install -e --id Google.Chrome --accept-package-agreements --accept-source-agreements
 winget install -e --id Kubernetes.kubectl --accept-package-agreements --accept-source-agreements
 winget install -e --id Python.Python.3.14 --accept-package-agreements --accept-source-agreements
+winget install -e --id Bruno.Bruno --accept-package-agreements --accept-source-agreements
 
 # Add exception to Windows Defender for C:\tools\ BEFORE downloading anything there
 Write-Host "`n[+] Adding Windows Defender exclusion for C:\tools\ ..." -ForegroundColor Cyan
