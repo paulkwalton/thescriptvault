@@ -189,7 +189,7 @@ winget install -e --id Python.Python.3.14 --accept-package-agreements --accept-s
 Download-PentestTool -Urls @(
     "https://live.sysinternals.com/ADExplorer.exe",
     "https://download.sysinternals.com/files/PSTools.zip"
-    "
+    
 )
 
 # Apply baseline hardening LAST (will reboot)
