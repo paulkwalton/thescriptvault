@@ -1,14 +1,54 @@
 # Windows 11 Setup Script (Azure) - Non-Domain Joined
 # ------------------------------------------------------------
 # Order:
-#   1. Apply Windows 11 v25H2 Security Baseline (-Win11NonDomainJoined)
-#   2. Remove unwanted apps
-#   3. (Optional) Disable firewall & tweak system (undoes some baseline protections)
-#   4. Install tooling
+#   1. Remove unwanted apps
+#   2. Install tooling
+#   3. Apply Windows 11 v25H2 Security Baseline (-Win11NonDomainJoined)
+#   4. Allow inbound RDP through firewall (after hardening)
 #
 # NOTE: The baseline ZIP no longer bundles LGPO.exe. LGPO.exe is now fetched only from the provided GitHub link. No other sources are attempted.
 # If download fails, manually download the Security Compliance Toolkit and place LGPO.exe into:
 #   <...>\Windows 11 v25H2 Security Baseline\Scripts\Tools\LGPO.exe
+
+function Remove-UnwantedApps {
+    Write-Host "`n[+] Removing unwanted Windows apps..." -ForegroundColor Cyan
+    $bloatwareApps = @(
+        "Microsoft.ZuneMusic","Microsoft.ZuneVideo","Microsoft.WindowsMaps",
+        "Microsoft.MicrosoftSolitaireCollection","Microsoft.BingWeather","Microsoft.WindowsAlarms",
+        "Microsoft.WindowsCamera","Microsoft.GetHelp","Microsoft.Getstarted",
+        "Microsoft.MicrosoftOfficeHub","Microsoft.Microsoft3DViewer","Microsoft.XboxApp",
+        "Microsoft.XboxGameOverlay","Microsoft.XboxGamingOverlay","Microsoft.XboxIdentityProvider",
+        "Microsoft.XboxSpeechToTextOverlay","Microsoft.MixedReality.Portal","Microsoft.People",
+        "Microsoft.SkypeApp","Microsoft.MicrosoftStickyNotes","Microsoft.YourPhone",
+        "Microsoft.OneConnect","Microsoft.Todos"
+    )
+    foreach ($app in $bloatwareApps) {
+        try {
+            Get-AppxPackage -Name $app -AllUsers | Remove-AppxPackage -ErrorAction SilentlyContinue
+            Get-AppxProvisionedPackage -Online | Where-Object DisplayName -EQ $app | Remove-AppxProvisionedPackage -Online -ErrorAction SilentlyContinue
+            Write-Host "[OK] Removed ${app}" -ForegroundColor Green
+        }
+        catch {
+            Write-Host "[X] Failed to remove ${app}: $($_.Exception.Message)" -ForegroundColor Red
+        }
+    }
+    Write-Host "[+] Bloatware removal complete." -ForegroundColor Yellow
+}
+
+function Allow-RDP-InboundFirewall {
+    Write-Host "`n[+] Allowing inbound RDP through Windows Firewall..." -ForegroundColor Cyan
+    try {
+        # Enable Remote Desktop (if not already enabled)
+        Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server' -Name "fDenyTSConnections" -Value 0 -ErrorAction Stop
+
+        # Add inbound firewall rule for RDP (TCP 3389)
+        New-NetFirewallRule -DisplayName "Allow RDP Inbound" -Direction Inbound -Protocol TCP -LocalPort 3389 -Action Allow -Profile Domain,Private,Public -ErrorAction Stop
+        Write-Host "[OK] Inbound RDP allowed in firewall." -ForegroundColor Green
+    }
+    catch {
+        Write-Host "[X] Failed to allow inbound RDP: $($_.Exception.Message)" -ForegroundColor Red
+    }
+}
 
 function Install-WindowsSecurityBaselineNonDomainJoined {
     param(
@@ -99,51 +139,10 @@ function Install-WindowsSecurityBaselineNonDomainJoined {
     }
 }
 
-function Remove-UnwantedApps {
-    Write-Host "`n[+] Removing unwanted Windows apps..." -ForegroundColor Cyan
-    $bloatwareApps = @(
-        "Microsoft.ZuneMusic","Microsoft.ZuneVideo","Microsoft.WindowsMaps",
-        "Microsoft.MicrosoftSolitaireCollection","Microsoft.BingWeather","Microsoft.WindowsAlarms",
-        "Microsoft.WindowsCamera","Microsoft.GetHelp","Microsoft.Getstarted",
-        "Microsoft.MicrosoftOfficeHub","Microsoft.Microsoft3DViewer","Microsoft.XboxApp",
-        "Microsoft.XboxGameOverlay","Microsoft.XboxGamingOverlay","Microsoft.XboxIdentityProvider",
-        "Microsoft.XboxSpeechToTextOverlay","Microsoft.MixedReality.Portal","Microsoft.People",
-        "Microsoft.SkypeApp","Microsoft.MicrosoftStickyNotes","Microsoft.YourPhone",
-        "Microsoft.OneConnect","Microsoft.Todos"
-    )
-    foreach ($app in $bloatwareApps) {
-        try {
-            Get-AppxPackage -Name $app -AllUsers | Remove-AppxPackage -ErrorAction SilentlyContinue
-            Get-AppxProvisionedPackage -Online | Where-Object DisplayName -EQ $app | Remove-AppxProvisionedPackage -Online -ErrorAction SilentlyContinue
-            Write-Host "[OK] Removed ${app}" -ForegroundColor Green
-        }
-        catch {
-            Write-Host "[X] Failed to remove ${app}: $($_.Exception.Message)" -ForegroundColor Red
-        }
-    }
-    Write-Host "[+] Bloatware removal complete." -ForegroundColor Yellow
-}
-
-function Disable-Firewall-And-Configure-System {
-    Write-Host "`n[+] Disabling firewalls and configuring system settings..." -ForegroundColor Cyan
-    Write-Host "[!] This undoes firewall protections from the security baseline. Remove this call to keep them." -ForegroundColor Magenta
-    try {
-        Set-NetFirewallProfile -Profile Domain,Private,Public -Enabled False -ErrorAction Stop
-        powercfg /s SCHEME_MIN
-        Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server' -Name "fDenyTSConnections" -Value 0 -ErrorAction Stop
-        Write-Host "[OK] Firewall disabled; power plan set; RDP enabled." -ForegroundColor Green
-    }
-    catch {
-        Write-Host "[X] Failed to configure system settings: $($_.Exception.Message)" -ForegroundColor Red
-    }
-}
-
 # -------------------------
 # Main Execution
 # -------------------------
-Install-WindowsSecurityBaselineNonDomainJoined
 Remove-UnwantedApps
-Disable-Firewall-And-Configure-System   # Comment/remove to retain firewall from baseline
 
 # Tooling Installation
 winget install -e --id Iterate.Cyberduck --accept-package-agreements --accept-source-agreements
@@ -157,5 +156,11 @@ winget install -e --id=Microsoft.Sysinternals.Suite --accept-package-agreements 
 winget install -e --id Microsoft.AzureDataStudio --accept-package-agreements --accept-source-agreements
 winget install -e --id Microsoft.Azure.StorageExplorer --accept-package-agreements --accept-source-agreements
 winget install -e --id Microsoft.AzureCLI --accept-package-agreements --accept-source-agreements
+
+# Apply baseline hardening LAST (will reboot)
+Install-WindowsSecurityBaselineNonDomainJoined
+
+# Re-enable inbound RDP through firewall after hardening
+Allow-RDP-InboundFirewall
 
 Write-Host "`n[+] Script finished. Reboot recommended if baseline just applied." -ForegroundColor Yellow
