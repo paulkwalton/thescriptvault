@@ -139,6 +139,30 @@ function Install-WindowsSecurityBaselineNonDomainJoined {
     }
 }
 
+function Download-PentestTool {
+    param(
+        [Parameter(Mandatory=$true)]
+        [string[]]$Urls
+    )
+    $toolsFolder = "C:\tools"
+    if (-not (Test-Path $toolsFolder)) {
+        Write-Host "[*] Creating $toolsFolder directory..." -ForegroundColor DarkCyan
+        New-Item -ItemType Directory -Path $toolsFolder | Out-Null
+    }
+    foreach ($url in $Urls) {
+        $fileName = Split-Path $url -Leaf
+        $destPath = Join-Path $toolsFolder $fileName
+        Write-Host "[*] Downloading $fileName to $toolsFolder ..." -ForegroundColor Cyan
+        try {
+            Invoke-WebRequest -Uri $url -OutFile $destPath -UseBasicParsing -ErrorAction Stop
+            Write-Host "[OK] Downloaded $fileName." -ForegroundColor Green
+        }
+        catch {
+            Write-Host "[X] Failed to download $fileName: $($_.Exception.Message)" -ForegroundColor Red
+        }
+    }
+}
+
 # -------------------------
 # Main Execution
 # -------------------------
@@ -156,6 +180,14 @@ winget install -e --id=Microsoft.Sysinternals.Suite --accept-package-agreements 
 winget install -e --id Microsoft.AzureDataStudio --accept-package-agreements --accept-source-agreements
 winget install -e --id Microsoft.Azure.StorageExplorer --accept-package-agreements --accept-source-agreements
 winget install -e --id Microsoft.AzureCLI --accept-package-agreements --accept-source-agreements
+
+
+# Download penetration testing tools
+Download-PentestTool -Urls @(
+    "https://live.sysinternals.com/ADExplorer.exe",
+    "https://download.sysinternals.com/files/PSTools.zip"
+    "
+)
 
 # Apply baseline hardening LAST (will reboot)
 Install-WindowsSecurityBaselineNonDomainJoined
