@@ -209,5 +209,6 @@ Install-WindowsSecurityBaselineNonDomainJoined
 
 # Re-enable inbound RDP through firewall after hardening
 Allow-RDP-InboundFirewall
+wsl --update
 
 Write-Host "`n[+] Script finished. Reboot recommended if baseline just applied." -ForegroundColor Yellow
