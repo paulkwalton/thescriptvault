@@ -255,8 +255,8 @@ Download-PentestTool -Urls @(
     "https://download.sysinternals.com/files/PSTools.zip"
 )
 
-# Apply baseline hardening LAST (will reboot)
-Install-WindowsSecurityBaselineNonDomainJoined
+# Apply baseline hardening LAST (will reboot). Commented out as it stops RDP from working.
+# Install-WindowsSecurityBaselineNonDomainJoined
 
 # Re-enable inbound RDP through firewall after hardening
 Allow-RDP-InboundFirewall
