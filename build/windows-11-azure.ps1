@@ -32,10 +32,10 @@ function Remove-UnwantedApps {
         try {
             Get-AppxPackage -Name $app -AllUsers | Remove-AppxPackage -ErrorAction SilentlyContinue
             Get-AppxProvisionedPackage -Online | Where-Object DisplayName -EQ $app | Remove-AppxProvisionedPackage -Online -ErrorAction SilentlyContinue
-            Write-Host "[OK] Removed $app" -ForegroundColor Green
+            Write-Host "[OK] Removed ${app}" -ForegroundColor Green
         }
         catch {
-            Write-Host "[X] Failed to remove $app: $($_.Exception.Message)" -ForegroundColor Red
+            Write-Host "[X] Failed to remove ${app}: $($_.Exception.Message)" -ForegroundColor Red
         }
     }
     Write-Host "[+] Bloatware removal complete." -ForegroundColor Yellow
@@ -55,20 +55,21 @@ function Disable-Firewall-And-Configure-System {
 }
 
 # Main Script Execution
-Test-Admin
 Remove-UnwantedApps
 Disable-Firewall-And-Configure-System
-winget install -e --id Iterate.Cyberduck
-winget install -e --id Tenable.Nessus
-winget install -e --id PortSwigger.BurpSuite.Professional
-winget install -e --id Insecure.Nmap
-winget install -e --id WiresharkFoundation.Wireshark
-winget install -e --id Docker.DockerDesktop
-winget install -e --id Git.Git
-winget install -e --id=Microsoft.Sysinternals.Suite
 
-winget install -e --id Microsoft.AzureDataStudio
-winget install -e --id Microsoft.Azure.StorageExplorer
-winget install -e --id Microsoft.AzureCLI
+# Suppress license prompts for each winget install using --accept-package-agreements --accept-source-agreements
+winget install -e --id Iterate.Cyberduck --accept-package-agreements --accept-source-agreements
+winget install -e --id Tenable.Nessus --accept-package-agreements --accept-source-agreements
+winget install -e --id PortSwigger.BurpSuite.Professional --accept-package-agreements --accept-source-agreements
+winget install -e --id Insecure.Nmap --accept-package-agreements --accept-source-agreements
+winget install -e --id WiresharkFoundation.Wireshark --accept-package-agreements --accept-source-agreements
+winget install -e --id Docker.DockerDesktop --accept-package-agreements --accept-source-agreements
+winget install -e --id Git.Git --accept-package-agreements --accept-source-agreements
+winget install -e --id=Microsoft.Sysinternals.Suite --accept-package-agreements --accept-source-agreements
+
+winget install -e --id Microsoft.AzureDataStudio --accept-package-agreements --accept-source-agreements
+winget install -e --id Microsoft.Azure.StorageExplorer --accept-package-agreements --accept-source-agreements
+winget install -e --id Microsoft.AzureCLI --accept-package-agreements --accept-source-agreements
 
 Write-Host "`n[+] Script finished." -ForegroundColor Yellow
