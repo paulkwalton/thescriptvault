@@ -183,6 +183,7 @@ winget install -e --id Microsoft.AzureCLI --accept-package-agreements --accept-s
 winget install -e --id Google.Chrome --accept-package-agreements --accept-source-agreements
 winget install -e --id Kubernetes.kubectl --accept-package-agreements --accept-source-agreements
 winget install -e --id Microsoft.WindowsTerminal --accept-package-agreements --accept-source-agreements
+winget install -e --id Python.Python.3.14 --accept-package-agreements --accept-source-agreements
 
 # Download penetration testing tools
 Download-PentestTool -Urls @(
