@@ -158,7 +158,7 @@ function Download-PentestTool {
             Write-Host "[OK] Downloaded $fileName." -ForegroundColor Green
         }
         catch {
-            Write-Host "[X] Failed to download $fileName: $($_.Exception.Message)" -ForegroundColor Red
+            Write-Host "[X] Failed to download ${fileName}: $($_.Exception.Message)" -ForegroundColor Red
         }
     }
 }
@@ -168,7 +168,12 @@ function Download-PentestTool {
 # -------------------------
 Remove-UnwantedApps
 
+# Set region to United Kingdom (GeoId: 244) for winget/msstore compatibility
+Set-WinHomeLocation -GeoId 244
+
 # Tooling Installation
+winget source update
+winget install -e --id Microsoft.WindowsTerminal --accept-package-agreements --accept-source-agreements
 winget install -e --id Iterate.Cyberduck --accept-package-agreements --accept-source-agreements
 winget install -e --id Tenable.Nessus --accept-package-agreements --accept-source-agreements
 winget install -e --id PortSwigger.BurpSuite.Professional --accept-package-agreements --accept-source-agreements
@@ -182,14 +187,21 @@ winget install -e --id Microsoft.Azure.StorageExplorer --accept-package-agreemen
 winget install -e --id Microsoft.AzureCLI --accept-package-agreements --accept-source-agreements
 winget install -e --id Google.Chrome --accept-package-agreements --accept-source-agreements
 winget install -e --id Kubernetes.kubectl --accept-package-agreements --accept-source-agreements
-winget install -e --id Microsoft.WindowsTerminal --accept-package-agreements --accept-source-agreements
 winget install -e --id Python.Python.3.14 --accept-package-agreements --accept-source-agreements
+
+# Add exception to Windows Defender for C:\tools\ BEFORE downloading anything there
+Write-Host "`n[+] Adding Windows Defender exclusion for C:\tools\ ..." -ForegroundColor Cyan
+try {
+    Add-MpPreference -ExclusionPath "C:\tools"
+    Write-Host "[OK] Windows Defender exclusion added for C:\tools\" -ForegroundColor Green
+} catch {
+    Write-Host "[X] Failed to add Windows Defender exclusion: $($_.Exception.Message)" -ForegroundColor Red
+}
 
 # Download penetration testing tools
 Download-PentestTool -Urls @(
     "https://live.sysinternals.com/ADExplorer.exe",
     "https://download.sysinternals.com/files/PSTools.zip"
-    
 )
 
 # Apply baseline hardening LAST (will reboot)
