@@ -180,7 +180,9 @@ winget install -e --id=Microsoft.Sysinternals.Suite --accept-package-agreements 
 winget install -e --id Microsoft.AzureDataStudio --accept-package-agreements --accept-source-agreements
 winget install -e --id Microsoft.Azure.StorageExplorer --accept-package-agreements --accept-source-agreements
 winget install -e --id Microsoft.AzureCLI --accept-package-agreements --accept-source-agreements
-
+winget install -e --id Google.Chrome --accept-package-agreements --accept-source-agreements
+winget install -e --id Kubernetes.kubectl --accept-package-agreements --accept-source-agreements
+winget install -e --id Microsoft.WindowsTerminal --accept-package-agreements --accept-source-agreements
 
 # Download penetration testing tools
 Download-PentestTool -Urls @(
