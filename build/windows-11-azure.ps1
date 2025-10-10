@@ -10,25 +10,6 @@
 # If download fails, manually download the Security Compliance Toolkit and place LGPO.exe into:
 #   <...>\Windows 11 v25H2 Security Baseline\Scripts\Tools\LGPO.exe
 
-# Download App Installer (contains winget)
-$wingetBundle = "$env:TEMP\AppInstaller.msixbundle"
-Invoke-WebRequest -Uri "https://aka.ms/getwinget" -OutFile $wingetBundle
-
-# Install App Installer
-Add-AppxPackage -Path $wingetBundle
-
-# Optional: Wait for registration
-Start-Sleep -Seconds 5
-
-# Confirm installation
-if (-not (Get-Command winget -ErrorAction SilentlyContinue)) {
-    Write-Host "winget installation failed. Please check system requirements and try again."
-    exit 1
-} else {
-    Write-Host "winget installed successfully."
-}
-
-
 function Remove-UnwantedApps {
     Write-Host "`n[+] Removing unwanted Windows apps..." -ForegroundColor Cyan
     $bloatwareApps = @(
