@@ -234,8 +234,23 @@ try {
 
 # Download penetration testing tools
 Download-PentestTool -Urls @(
+    # Sysinternals
     "https://live.sysinternals.com/ADExplorer.exe",
-    "https://download.sysinternals.com/files/PSTools.zip"
+    "https://download.sysinternals.com/files/PSTools.zip",
+
+    # Portswigger Dependencies
+    "https://repo1.maven.org/maven2/org/python/jython-standalone/2.7.4/jython-standalone-2.7.4.jar",
+    "https://repo1.maven.org/maven2/org/jruby/jruby-complete/10.0.2.0/jruby-complete-10.0.2.0.jar",
+
+    # Portswigger Extensions
+    "https://portswigger.net/bappstore/bapps/download/444407b96d9c4de0adb7aed89e826122/5",      # 403 Bypasser
+    "https://portswigger.net/bappstore/bapps/download/f9bbac8c4acf4aefa4d7dc92a991af2f/27",      # Autorize
+    "https://portswigger.net/bappstore/bapps/download/f923cbf91698420890354c1d8958fee6/33",      # JSON Web Tokens
+    "https://portswigger.net/bappstore/bapps/download/c61cfa893bb14db4b01775554f7b802e/23",      # SAML Raider
+    "https://portswigger.net/bappstore/bapps/download/0ab7a94d8e11449daaf0fb387431225b/8",       # JS Miner
+    "https://portswigger.net/bappstore/bapps/download/ae62baff8fa24150991bad5eaf6d4d38/15",      # Software Version Reporter
+    "https://portswigger.net/bappstore/470b7057b86f41c396a97903377f3d81",                        # Logger++
+    "https://portswigger.net/bappstore/bapps/download/36238b534a78494db9bf2d03f112265c/13"       # Retire.JS
 )
 
 # Apply baseline hardening LAST (will reboot). Commented out as it stops RDP from working.
