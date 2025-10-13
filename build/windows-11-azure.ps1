@@ -251,6 +251,7 @@ Download-PentestTool -Urls @(
     "https://portswigger.net/bappstore/bapps/download/ae62baff8fa24150991bad5eaf6d4d38/15",      # Software Version Reporter
     "https://portswigger.net/bappstore/470b7057b86f41c396a97903377f3d81",                        # Logger++
     "https://portswigger.net/bappstore/bapps/download/36238b534a78494db9bf2d03f112265c/13"       # Retire.JS
+    "https://www.tenable.com/downloads/api/v2/pages/nessus/files/nessus-updates-10.9.4.tar.gz"
 )
 
 # Apply baseline hardening LAST (will reboot). Commented out as it stops RDP from working.
