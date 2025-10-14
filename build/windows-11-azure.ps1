@@ -177,18 +177,25 @@ function Download-PentestTool {
         Write-Host "[*] Creating $toolsFolder directory..." -ForegroundColor DarkCyan
         New-Item -ItemType Directory -Path $toolsFolder | Out-Null
     }
+
+    $jobs = @()
     foreach ($url in $Urls) {
         $fileName = Split-Path $url -Leaf
         $destPath = Join-Path $toolsFolder $fileName
-        Write-Host "[*] Downloading $fileName to $toolsFolder ..." -ForegroundColor Cyan
-        try {
-            Invoke-WebRequest -Uri $url -OutFile $destPath -UseBasicParsing -ErrorAction Stop
-            Write-Host "[OK] Downloaded $fileName." -ForegroundColor Green
-        }
-        catch {
-            Write-Host "[X] Failed to download ${fileName}: $($_.Exception.Message)" -ForegroundColor Red
-        }
+        $jobs += Start-Job -ScriptBlock {
+            param($url, $destPath, $fileName)
+            try {
+                Invoke-WebRequest -Uri $url -OutFile $destPath -UseBasicParsing -ErrorAction Stop
+                Write-Host "[OK] Downloaded $fileName." -ForegroundColor Green
+            } catch {
+                Write-Host "[X] Failed to download ${fileName}: $($_.Exception.Message)" -ForegroundColor Red
+            }
+        } -ArgumentList $url, $destPath, $fileName
     }
+
+    Write-Host "[*] Waiting for all downloads to complete..." -ForegroundColor Cyan
+    $jobs | Wait-Job | Out-Null
+    $jobs | ForEach-Object { Receive-Job -Job $_; Remove-Job -Job $_ }
 }
 
 # -------------------------
