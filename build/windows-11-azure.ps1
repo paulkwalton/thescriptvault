@@ -179,10 +179,29 @@ function Install-WindowsSecurityBaselineNonDomainJoined {
 }
 
 function Download-PentestTool {
-    param(
-        [Parameter(Mandatory=$true)]
-        [string[]]$Urls
+    $Urls = @(
+        # Sysinternals
+        "https://live.sysinternals.com/ADExplorer.exe",
+        "https://download.sysinternals.com/files/PSTools.zip",
+
+        # Portswigger Dependencies
+        "https://repo1.maven.org/maven2/org/python/jython-standalone/2.7.4/jython-standalone-2.7.4.jar",
+        "https://repo1.maven.org/maven2/org/jruby/jruby-complete/10.0.2.0/jruby-complete-10.0.2.0.jar",
+
+        # Portswigger Extensions
+        "https://portswigger.net/bappstore/bapps/download/444407b96d9c4de0adb7aed89e826122/5",      # 403 Bypasser
+        "https://portswigger.net/bappstore/bapps/download/f9bbac8c4acf4aefa4d7dc92a991af2f/27",      # Autorize
+        "https://portswigger.net/bappstore/bapps/download/f923cbf91698420890354c1d8958fee6/33",      # JSON Web Tokens
+        "https://portswigger.net/bappstore/bapps/download/c61cfa893bb14db4b01775554f7b802e/23",      # SAML Raider
+        "https://portswigger.net/bappstore/bapps/download/0ab7a94d8e11449daaf0fb387431225b/8",       # JS Miner
+        "https://portswigger.net/bappstore/bapps/download/ae62baff8fa24150991bad5eaf6d4d38/15",      # Software Version Reporter
+        "https://portswigger.net/bappstore/470b7057b86f41c396a97903377f3d81",                        # Logger++
+        "https://portswigger.net/bappstore/bapps/download/36238b534a78494db9bf2d03f112265c/13",      # Retire.JS
+
+        # Nessus Updates
+        "https://www.tenable.com/downloads/api/v2/pages/nessus/files/nessus-updates-10.9.4.tar.gz"
     )
+
     $toolsFolder = "C:\tools"
     if (-not (Test-Path $toolsFolder)) {
         Write-Host "[*] Creating $toolsFolder directory..." -ForegroundColor DarkCyan
@@ -196,8 +215,17 @@ function Download-PentestTool {
         $jobs += Start-Job -ScriptBlock {
             param($url, $destPath, $fileName)
             try {
-                Invoke-WebRequest -Uri $url -OutFile $destPath -UseBasicParsing -ErrorAction Stop
-                Write-Host "[OK] Downloaded $fileName." -ForegroundColor Green
+                & curl.exe -L --fail --silent --show-error -o $destPath $url
+                if (Test-Path $destPath) {
+                    $item = Get-Item $destPath
+                    if ($item.Length -gt 0) {
+                        Write-Host "[OK] Downloaded $fileName." -ForegroundColor Green
+                    } else {
+                        Write-Host "[X] Download failed or file empty: $fileName" -ForegroundColor Red
+                    }
+                } else {
+                    Write-Host "[X] Download failed, file not found: $fileName" -ForegroundColor Red
+                }
             } catch {
                 Write-Host "[X] Failed to download ${fileName}: $($_.Exception.Message)" -ForegroundColor Red
             }
@@ -250,28 +278,6 @@ try {
 } catch {
     Write-Host "[X] Failed to add Windows Defender exclusion: $($_.Exception.Message)" -ForegroundColor Red
 }
-
-# Download penetration testing tools
-Download-PentestTool -Urls @(
-    # Sysinternals
-    "https://live.sysinternals.com/ADExplorer.exe",
-    "https://download.sysinternals.com/files/PSTools.zip",
-
-    # Portswigger Dependencies
-    "https://repo1.maven.org/maven2/org/python/jython-standalone/2.7.4/jython-standalone-2.7.4.jar",
-    "https://repo1.maven.org/maven2/org/jruby/jruby-complete/10.0.2.0/jruby-complete-10.0.2.0.jar",
-
-    # Portswigger Extensions
-    "https://portswigger.net/bappstore/bapps/download/444407b96d9c4de0adb7aed89e826122/5",      # 403 Bypasser
-    "https://portswigger.net/bappstore/bapps/download/f9bbac8c4acf4aefa4d7dc92a991af2f/27",      # Autorize
-    "https://portswigger.net/bappstore/bapps/download/f923cbf91698420890354c1d8958fee6/33",      # JSON Web Tokens
-    "https://portswigger.net/bappstore/bapps/download/c61cfa893bb14db4b01775554f7b802e/23",      # SAML Raider
-    "https://portswigger.net/bappstore/bapps/download/0ab7a94d8e11449daaf0fb387431225b/8",       # JS Miner
-    "https://portswigger.net/bappstore/bapps/download/ae62baff8fa24150991bad5eaf6d4d38/15",      # Software Version Reporter
-    "https://portswigger.net/bappstore/470b7057b86f41c396a97903377f3d81",                        # Logger++
-    "https://portswigger.net/bappstore/bapps/download/36238b534a78494db9bf2d03f112265c/13"       # Retire.JS
-    "https://www.tenable.com/downloads/api/v2/pages/nessus/files/nessus-updates-10.9.4.tar.gz"
-)
 
 # Apply baseline hardening LAST (will reboot). Commented out as it stops RDP from working.
 # Install-WindowsSecurityBaselineNonDomainJoined
