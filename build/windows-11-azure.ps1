@@ -279,6 +279,7 @@ try {
     Write-Host "[X] Failed to add Windows Defender exclusion: $($_.Exception.Message)" -ForegroundColor Red
 }
 
+Download-PentestTool
 # Apply baseline hardening LAST (will reboot). Commented out as it stops RDP from working.
 # Install-WindowsSecurityBaselineNonDomainJoined
 
