@@ -237,6 +237,31 @@ function Download-PentestTool {
     $jobs | ForEach-Object { Receive-Job -Job $_; Remove-Job -Job $_ }
 }
 
+function Enable-AllRSATTools {
+    Write-Host "`n[+] Enabling all RSAT (Remote Server Administration Tools) features..." -ForegroundColor Cyan
+    try {
+        # Get all RSAT related capabilities
+        $rsatCapabilities = Get-WindowsCapability -Online | Where-Object { $_.Name -like 'Rsat.*' }
+        foreach ($cap in $rsatCapabilities) {
+            if ($cap.State -ne 'Installed') {
+                Write-Host "[*] Installing $($cap.Name)..." -ForegroundColor DarkCyan
+                try {
+                    Add-WindowsCapability -Online -Name $cap.Name -ErrorAction Stop
+                    Write-Host "[OK] Installed $($cap.Name)." -ForegroundColor Green
+                } catch {
+                    Write-Host "[X] Failed to install $($cap.Name): $($_.Exception.Message)" -ForegroundColor Red
+                }
+            } else {
+                Write-Host "[OK] $($cap.Name) already installed." -ForegroundColor Green
+            }
+        }
+        Write-Host "[+] All RSAT tools enabled." -ForegroundColor Yellow
+    }
+    catch {
+        Write-Host "[X] Failed to enable RSAT tools: $($_.Exception.Message)" -ForegroundColor Red
+    }
+}
+
 # -------------------------
 # Main Execution
 # -------------------------
@@ -286,6 +311,7 @@ Download-PentestTool
 # Re-enable inbound RDP through firewall after hardening
 Allow-RDP-InboundFirewall
 wsl --update
+Enable-AllRSATTools
 
 "C:\Program Files\Microsoft SDKs\Azure\CLI2\wbin\az.cmd"
 Write-Host "`n[+] Script finished. Reboot recommended if baseline just applied." -ForegroundColor Yellow
