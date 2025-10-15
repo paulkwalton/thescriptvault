@@ -311,11 +311,3 @@ try {
     Write-Host "[X] Failed to remove scheduled task: $($_.Exception.Message)" -ForegroundColor Red
 }
 
-# Launch a Windows Defender quick scan, granted fairly pointless but performed for completeness.
-Write-Host "`n[+] Starting Windows Defender quick scan..." -ForegroundColor Cyan
-try {
-    Start-MpScan -ScanType QuickScan
-    Write-Host "[OK] Windows Defender quick scan started." -ForegroundColor Green
-} catch {
-    Write-Host "[X] Failed to start Windows Defender scan: $($_.Exception.Message)" -ForegroundColor Red
-}
