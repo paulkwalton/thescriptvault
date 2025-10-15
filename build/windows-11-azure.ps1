@@ -281,6 +281,8 @@ winget install -e --id Microsoft.SQLServerManagementStudio --accept-package-agre
 winget install -e --id Microsoft.Azure.AZCopy.10 --accept-package-agreements --accept-source-agreements
 winget install -e --id Microsoft.OpenJDK.21 --accept-package-agreements --accept-source-agreements
 winget install -e --id Microsoft.Sysinternals.BGInfo --accept-package-agreements --accept-source-agreements
+winget install -e --id Putty.Putty --accept-package-agreements --accept-source-agreements
+
 
 # Add exception to Windows Defender for C:\tools\ BEFORE downloading anything there
 Write-Host "`n[+] Adding Windows Defender exclusion for C:\tools\ ..." -ForegroundColor Cyan
