@@ -64,28 +64,14 @@ function Disable-IPv6 {
 }
 
 function Allow-RDP-InboundFirewall {
-    Write-Host "`n[+] Allowing inbound RDP and additional ports through Windows Firewall..." -ForegroundColor Cyan
+    Write-Host "`n[+] Disabling Windows Firewall for all profiles..." -ForegroundColor Cyan
     try {
-        # Enable Remote Desktop (if not already enabled)
-        Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server' -Name "fDenyTSConnections" -Value 0 -ErrorAction Stop
-
-        # Add inbound firewall rule for RDP (TCP 3389)
-        New-NetFirewallRule -DisplayName "Allow RDP Inbound" -Direction Inbound -Protocol TCP -LocalPort 3389 -Action Allow -Profile Domain,Private,Public -ErrorAction Stop
-
-        # Add additional TCP ports
-        New-NetFirewallRule -DisplayName "Allow SMB TCP 445 Inbound" -Direction Inbound -Protocol TCP -LocalPort 445 -Action Allow -Profile Domain,Private,Public -ErrorAction Stop
-        New-NetFirewallRule -DisplayName "Allow NetBIOS TCP 139 Inbound" -Direction Inbound -Protocol TCP -LocalPort 139 -Action Allow -Profile Domain,Private,Public -ErrorAction Stop
-        New-NetFirewallRule -DisplayName "Allow Custom TCP 9090 Inbound" -Direction Inbound -Protocol TCP -LocalPort 9090 -Action Allow -Profile Domain,Private,Public -ErrorAction Stop
-        New-NetFirewallRule -DisplayName "Allow Custom TCP 9089 Inbound" -Direction Inbound -Protocol TCP -LocalPort 9089 -Action Allow -Profile Domain,Private,Public -ErrorAction Stop
-
-        # Add UDP ports
-        New-NetFirewallRule -DisplayName "Allow NetBIOS UDP 137 Inbound" -Direction Inbound -Protocol UDP -LocalPort 137 -Action Allow -Profile Domain,Private,Public -ErrorAction Stop
-        New-NetFirewallRule -DisplayName "Allow NetBIOS UDP 138 Inbound" -Direction Inbound -Protocol UDP -LocalPort 138 -Action Allow -Profile Domain,Private,Public -ErrorAction Stop
-
-        Write-Host "[OK] Inbound RDP and specified ports allowed in firewall." -ForegroundColor Green
+        # Disable Windows Firewall for Domain, Private, and Public profiles
+        Set-NetFirewallProfile -Profile Domain,Private,Public -Enabled False -ErrorAction Stop
+        Write-Host "[OK] Windows Firewall disabled for all profiles." -ForegroundColor Green
     }
     catch {
-        Write-Host "[X] Failed to allow inbound ports: $($_.Exception.Message)" -ForegroundColor Red
+        Write-Host "[X] Failed to disable Windows Firewall: $($_.Exception.Message)" -ForegroundColor Red
     }
 }
 
