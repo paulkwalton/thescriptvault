@@ -24,13 +24,22 @@ function Remove-UnwantedApps {
     )
     foreach ($app in $bloatwareApps) {
         try {
+            # Add a verbose log to show which app is being processed
+            Write-Host "[*] Attempting to remove $app..." -ForegroundColor DarkCyan
+            
+            # Remove the app for all users
             Get-AppxPackage -Name $app -AllUsers | Remove-AppxPackage -ErrorAction SilentlyContinue
+            # Remove the provisioned package
             Get-AppxProvisionedPackage -Online | Where-Object DisplayName -EQ $app | Remove-AppxProvisionedPackage -Online -ErrorAction SilentlyContinue
+            
             Write-Host "[OK] Removed ${app}" -ForegroundColor Green
         }
         catch {
             Write-Host "[X] Failed to remove ${app}: $($_.Exception.Message)" -ForegroundColor Red
         }
+
+        # Add a small delay to reduce potential execution bottlenecks
+        Start-Sleep -Milliseconds 500
     }
     Write-Host "[+] Bloatware removal complete." -ForegroundColor Yellow
 }
