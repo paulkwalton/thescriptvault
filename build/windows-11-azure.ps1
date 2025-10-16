@@ -253,9 +253,6 @@ function Enable-AllRSATTools {
 # -------------------------
 Remove-UnwantedApps
 
-# Disable IPv6 early in the process
-Disable-IPv6
-
 # Set region to United Kingdom (GeoId: 244) for winget/msstore compatibility
 Set-WinHomeLocation -GeoId 244
 
@@ -282,7 +279,7 @@ winget install -e --id Microsoft.Azure.AZCopy.10 --accept-package-agreements --a
 winget install -e --id Microsoft.OpenJDK.21 --accept-package-agreements --accept-source-agreements
 winget install -e --id Microsoft.Sysinternals.BGInfo --accept-package-agreements --accept-source-agreements
 winget install -e --id Putty.Putty --accept-package-agreements --accept-source-agreements
-winget install -e --id RealVNC.VNCViewer --accept-package-agreements --accept-source-agreements
+
 
 # Add exception to Windows Defender for C:\tools\ BEFORE downloading anything there
 Write-Host "`n[+] Adding Windows Defender exclusion for C:\tools\ ..." -ForegroundColor Cyan
@@ -299,8 +296,7 @@ Download-PentestTool
 
 # Re-enable inbound RDP through firewall after hardening
 Allow-RDP-InboundFirewall
-wsl --update
-Enable-AllRSATTools
+#Enable-AllRSATTools
 
 "C:\Program Files\Microsoft SDKs\Azure\CLI2\wbin\az.cmd"
 Write-Host "`n[+] Script finished. Reboot recommended if baseline just applied." -ForegroundColor Yellow
