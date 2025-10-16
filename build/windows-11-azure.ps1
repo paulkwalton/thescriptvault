@@ -305,7 +305,7 @@ Download-PentestTool
 
 # Re-enable inbound RDP through firewall after hardening
 Allow-RDP-InboundFirewall
-#Enable-AllRSATTools
+Enable-AllRSATTools
 
 "C:\Program Files\Microsoft SDKs\Azure\CLI2\wbin\az.cmd"
 Write-Host "`n[+] Script finished. Reboot recommended if baseline just applied." -ForegroundColor Yellow
