@@ -310,12 +310,4 @@ Enable-AllRSATTools
 "C:\Program Files\Microsoft SDKs\Azure\CLI2\wbin\az.cmd"
 Write-Host "`n[+] Script finished. Reboot recommended if baseline just applied." -ForegroundColor Yellow
 
-# Remove the scheduled task so the script does not run again at logon
-Write-Host "`n[+] Removing scheduled task 'RunBuildScriptAtLogon'..." -ForegroundColor Cyan
-try {
-    Unregister-ScheduledTask -TaskName "RunBuildScriptAtLogon" -Confirm:$false -ErrorAction Stop
-    Write-Host "[OK] Scheduled task removed." -ForegroundColor Green
-} catch {
-    Write-Host "[X] Failed to remove scheduled task: $($_.Exception.Message)" -ForegroundColor Red
-}
 
