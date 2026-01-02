@@ -24,7 +24,7 @@ $wingetPackages = @(
     "Microsoft.Sysinternals", "Insecure.Nmap", "WinSCP.WinSCP", "TorProject.TorBrowser", "Microsoft.Sysinternals.PsTools",
     "Microsoft.Sysinternals.ProcessMonitor", "Microsoft.Sysinternals.ProcessExplorer", "Microsoft.Sqlcmd", "Microsoft.AzureDataStudio",
     "Microsoft.Azure.QuickReview", "rejetto.hfs", "Initex.Proxifier", "Microsoft.AzCopy", "Cyberduck.Cyberduck",
-    "Mozilla.FirefoxESR", "HeidiSQL.HeidiSQL", "mh.hxd", "KiTTY.KiTTY", "Kubernetes.kubectl","Terminals.Terminals"
+    "Mozilla.FirefoxESR", "HeidiSQL.HeidiSQL", "mh.hxd", "KiTTY.KiTTY", "Kubernetes.kubectl","Terminals.Terminals","ElementLabs.LMStudio"
 )
 
 Write-Host "`n[+] Installing packages via winget..." -ForegroundColor Cyan
